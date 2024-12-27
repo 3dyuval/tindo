@@ -1,0 +1,9 @@
+{
+  "name": "h3-websocket-monorepo",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm -r run dev",
+    "dev:client": "pnpm --dir client run dev",
+    "dev:server": "pnpm --dir server run dev"
+  }
+}
