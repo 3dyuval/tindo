@@ -8,7 +8,6 @@ export class StoreExample implements IStore {
     this.subscribers = { ...this.subscribers, ...callbackOptions };
   }
 
-
   addDoc(url: Doc) {
     this.subscribers.created?.(url); // Invoke created callback if provided
   }

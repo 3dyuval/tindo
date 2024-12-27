@@ -7,10 +7,14 @@ export interface CallbackOptions {
   deleted?: (doc: Doc) => void; // Callback for document deletion
 }
 
-export interface IStore {
+export abstract class  IStore {
   //public methods
-  addDoc(url: Doc): void; // Add a document
-  removeDoc(url: Doc): void; // Remove a document
-  updateDoc(url: Doc, newUrl: Doc): void; // Update a document
-  subscribe(callbackOptions: CallbackOptions): void; // Subscribe to callbacks
+
+  constructor() {
+    this.subscribe({});
+  }
+   abstract addDoc(url: Doc): void; // Add a document
+   abstract removeDoc(url: Doc): void; // Remove a document
+   abstract updateDoc(url: Doc, newUrl: Doc): void; // Update a document
+   abstract subscribe(callbackOptions: CallbackOptions): void; // Subscribe to callbacks
 }
