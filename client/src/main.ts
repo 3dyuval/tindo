@@ -1,29 +1,24 @@
-const url = import.meta.env.VITE_BASE_SOCKET_URL
-
-console.log("ws", "Connecting to", url, "...");
-const ws = new WebSocket(url);
-
-ws.addEventListener("message", async (event) => {
-  let data = typeof event.data === "string" ? event.data : await event.data.text();
-  const { user = "system", message = "" } = data.startsWith("{")
-      ? JSON.parse(data)
-      : { message: data };
-
-  console.log(
-      user,
-      typeof message === "string" ? message : JSON.stringify(message),
-  );
-
-  document.querySelector<HTMLDivElement>('#app')!.innerHTML = message === "string" ? message : JSON.stringify(message)
-
-});
-
-ws.addEventListener('open', () => {
-  console.log('[ws] connected.')
-})
-
-ws.addEventListener('close', () => {
-  console.log('[ws] disconnected.')
-})
+import { AutomergeStore } from "./store/store.automerge.ts"
+import { User } from "./user"
 
 
+function main() {
+  const user = new User()
+  const store = new AutomergeStore();
+  const docUrl = document.location.hash.split("#")[1];
+  const doc = store.getDoc(docUrl as any) ||  store.createDoc(['list item1']) as any
+
+  if (docUrl !== doc.url) {
+    window.location.hash = doc.url
+  }
+  const root = document.querySelector<HTMLDivElement>('#app')!;
+  root.innerHTML = `
+    <h1>Store Example</h1>
+    <pre>${JSON.stringify(user, null, 2)}</pre>
+    <ul>
+     ${JSON.stringify(doc, null, 2)}
+    </ul>
+  `
+}
+
+main()

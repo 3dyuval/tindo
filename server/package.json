@@ -8,6 +8,8 @@
     "preview": "node .output/server/index.mjs"
   },
   "devDependencies": {
-    "nitropack": "latest"
+    "nitropack": "latest",
+    "crossws": "^0.3.1",
+    "h3": "^1.13.0"
   }
 }

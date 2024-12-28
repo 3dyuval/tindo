@@ -1,22 +1,28 @@
-import { CallbackOptions, Doc, IStore } from "./store.interface";
+import { BaseStore, Publish } from "./store.interface";
 
-export class StoreExample implements IStore {
-  subscribers: CallbackOptions = {};
 
-  // Method to subscribe to events
-  subscribe(callbackOptions: CallbackOptions) {
-    this.subscribers = { ...this.subscribers, ...callbackOptions };
+export class StoreExample extends BaseStore {
+
+  @Publish('created')
+  async createDoc(doc) {
+    const id = crypto.randomUUID()
+    this.docs.set(id, doc);
+    return id;
   }
 
-  addDoc(url: Doc) {
-    this.subscribers.created?.(url); // Invoke created callback if provided
+  async getDoc(url: string) {
+    return this.docs.get(url);
   }
 
-  removeDoc(url: Doc) {
-    this.subscribers.deleted?.(url); // Invoke deleted callback if provided
+  @Publish('updated')
+  async updateDoc(url, doc) {
+    this.docs.set(url, doc);
   }
 
-  updateDoc(url: Doc, newUrl: Doc) {
-    this.subscribers.updated?.(newUrl); // Invoke updated callback if provided
+  @Publish('deleted')
+  async deleteDoc(url) {
+    this.docs.delete(url);
   }
+
+
 }
