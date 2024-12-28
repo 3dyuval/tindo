@@ -2,7 +2,7 @@
 
   &.stacked {
 
-    .column {
+    .column.selected {
       flex-grow: 1;
     }
 
@@ -12,7 +12,6 @@
       .item {
         &:not(:first-child) {
           display: none;
-          pointer-events: none;
         }
         position: absolute;
         top: 0;
@@ -25,10 +24,8 @@
   }
 
   .item {
-    list-style: none;
     padding: 10px;
     border: 1px solid black;
-    background-color: white;
     min-height: 300px;
     max-height: 300px;
   }

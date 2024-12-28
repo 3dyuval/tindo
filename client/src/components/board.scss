@@ -8,7 +8,8 @@
   .column {
     max-height: 100vh;
     overflow-y: auto;
-    scrollbar-gutter: stable both-edges;
+    //scrollbar-gutter: stable both-edges;
+    border: 1px solid black;
 
     h2 {
       position: sticky;
@@ -26,23 +27,20 @@
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
-
     padding: 0;
-    &:not(.stacked) .column {
 
+    .column {
+
+      flex: 1;
       &:not(.selected) {
         overflow: hidden;
         flex: 0 0 50px;
 
-        .item {
+        ul {
           display: none;
         }
       }
     }
-  }
-
-  .column {
-    border: 1px solid black;
   }
 
 }
