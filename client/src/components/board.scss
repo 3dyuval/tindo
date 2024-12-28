@@ -1,7 +1,21 @@
 .board {
 
   max-height: 100vh;
-  overflow-y: auto;
+  min-height: 100vh;
+  overflow-y: hidden;
+  padding: 0 10px;
+
+  .column {
+    max-height: 100vh;
+    overflow-y: auto;
+    scrollbar-gutter: stable both-edges;
+
+    h2 {
+      position: sticky;
+      top: 0;
+    }
+
+  }
 
   @media (min-width: 768px) {
     display: grid;
@@ -13,15 +27,8 @@
     display: flex;
     flex-direction: column;
 
-
-    .column {
-      flex-grow: 1;
-      overflow: auto;
-
-      h2 {
-        position: sticky;
-        top: 0;
-      }
+    padding: 0;
+    &:not(.stacked) .column {
 
       &:not(.selected) {
         overflow: hidden;
@@ -38,12 +45,5 @@
     border: 1px solid black;
   }
 
-  .item {
-    list-style: none;
-    padding: 10px;
-    border: 1px solid black;
-    background-color: white;
-    min-height: 300px;
-  }
 }
 
