@@ -1,3 +1,4 @@
+
 const url = import.meta.env.VITE_BASE_SOCKET_URL
 
 console.log("ws", "Connecting to", url, "...");
@@ -25,5 +26,3 @@ ws.addEventListener('open', () => {
 ws.addEventListener('close', () => {
   console.log('[ws] disconnected.')
 })
-
-

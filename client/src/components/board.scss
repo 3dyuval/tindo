@@ -1,0 +1,49 @@
+.board {
+
+  max-height: 100vh;
+  overflow-y: auto;
+
+  @media (min-width: 768px) {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+
+
+    .column {
+      flex-grow: 1;
+      overflow: auto;
+
+      h2 {
+        position: sticky;
+        top: 0;
+      }
+
+      &:not(.selected) {
+        overflow: hidden;
+        flex: 0 0 50px;
+
+        .item {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .column {
+    border: 1px solid black;
+  }
+
+  .item {
+    list-style: none;
+    padding: 10px;
+    border: 1px solid black;
+    background-color: white;
+    min-height: 300px;
+  }
+}
+
