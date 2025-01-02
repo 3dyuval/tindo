@@ -1,0 +1,15 @@
+I am planning for a realtime todo app for groups.
+
+Your task is to create a database schema and your output should be a .sql file called db.migration01.sql for my todo app.
+
+requirements: It works with postgress It should support any arbitrary json data for the todo. It needs to have a creator on the todo, and a collaborator list. It needs another table for creators and collaborators. Make sure everything is super simple and you can extend upon it later.
+
+task 2. Build upon the first example and create a table called "tags". It should link between many to many. It would allow todos to be linked together using categories. The first many would be users, and the second many would be todos.
+
+-----
+
+
+
+users was changed to actors 2, Find a way to query actors based on tags, so these would hold true:
+
+actor can query all of his collaborators based on his todos actor can query all of his tags based on his todos an actor can query all of his collabrators based on a single todo an actor can query all of this collaborators based on a tag
