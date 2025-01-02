@@ -8,19 +8,19 @@ Let's insert some sample data to test the queries.
 SQL Query:
 */
 -- Insert Actors
-INSERT INTO actors (id, name, email) VALUES
-('actor1-uuid', 'Alice', 'alice@example.com'),
-('actor2-uuid', 'Bob', 'bob@example.com'),
-('actor3-uuid', 'Charlie', 'charlie@example.com');
+INSERT INTO actors (name, email) VALUES
+(Alice', 'alice@example.com'),
+(Bob', 'bob@example.com'),
+(Charlie', 'charlie@example.com');
 
 -- Insert Tags
 INSERT INTO tags (id, name) VALUES
-('tag1-uuid', 'Work'),
-('tag2-uuid', 'Personal');
+('Work'),
+('Personal');
 
 -- Actor1 creates a todo
-INSERT INTO todos (id, creator_id, data) VALUES
-('todo1-uuid', 'actor1-uuid', '{"title": "Project Proposal"}');
+INSERT INTO todos (creator_id, data) VALUES
+('5fceeb58-71e7-43fb-801d-466b4ead1959', '{"title": "Project Proposal"}');
 
 -- Actor1 adds collaborators to the todo
 INSERT INTO todo_collaborators (todo_id, actor_id) VALUES
@@ -42,9 +42,9 @@ Executing the Queries
 
 
  */
- 
+
  -- Set actor_id to 'actor1-uuid'
- 
+
  -- Execute the first query with ':actor_id' replaced
  SELECT
      DISTINCT ac.id AS collaborator_id,
@@ -62,22 +62,22 @@ Executing the Queries
          SELECT todo_id FROM todo_collaborators WHERE actor_id = 'actor1-uuid'
      )
      AND ac.id != 'actor1-uuid';
-     
-     
+
+
    /*
-   
-   
+
+
 collaborator_id	collaborator_name	collaborator_email
 actor2-uuid	Bob	bob@example.com
 actor3-uuid	Charlie	charlie@example.com
 
    2. Actor1 Queries All Tags Based on Their Todos
-   
+
    */
-   
-   
+
+
    -- Set actor_id to 'actor1-uuid'
-   
+
    SELECT
        DISTINCT tg.id AS tag_id,
        tg.name AS tag_name
@@ -92,7 +92,7 @@ actor3-uuid	Charlie	charlie@example.com
        OR t.id IN (
            SELECT todo_id FROM todo_collaborators WHERE actor_id = 'actor1-uuid'
        );
-   
+
 
 
 /*
@@ -121,12 +121,12 @@ INNER JOIN
 WHERE
     tc.todo_id = 'todo1-uuid'
     AND ac.id != 'actor1-uuid';
-    
-    
+
+
   /*
-  
+
   Expected Result:
-  
+
   collaborator_id	collaborator_name	collaborator_email
   actor2-uuid	Bob	bob@example.com
   actor3-uuid	Charlie	charlie@example.com
@@ -158,16 +158,16 @@ WHERE
             SELECT todo_id FROM todo_collaborators WHERE actor_id = 'actor1-uuid'
         ))
     AND ac.id != 'actor1-uuid';
-    
-    
-    
+
+
+
     /*
     Expected Result:
-    
+
     collaborator_id	collaborator_name	collaborator_email
     actor2-uuid	Bob	bob@example.com
     actor3-uuid	Charlie	charlie@example.com
 
 
-    
+
     *
