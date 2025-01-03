@@ -1,0 +1,4 @@
+GET http://localhost:4000/electric/?table=actors&offset=-1
+Authorization: Bearer 123
+
+###
