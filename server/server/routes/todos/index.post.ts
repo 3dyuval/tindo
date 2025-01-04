@@ -1,5 +1,5 @@
-import { assertMethod, handleCors } from "h3"
-import { useUserData } from "~~/utils/userData"
+import { assertMethod, handleCors, isMethod } from "h3"
+import { getUser } from "~~/utils/getUser"
 import { z } from "zod"
 import pg from 'pg'
 
@@ -15,11 +15,9 @@ const pool = new pg.Pool({
 
 export default eventHandler(async (event) => {
   handleCors(event, {
-    origin: ['http://localhost:8080']
+    origin: process.env.ALLOW_ORIGIN.split(',').filter(Boolean)
   })
-  assertMethod(event, 'POST')
-
-  const user = await useUserData(event)
+  const user = await getUser(event)
   if (!user) {
     return new Response(`user not found`, { status: 401 })
   }
@@ -27,7 +25,7 @@ export default eventHandler(async (event) => {
   const body = await readBody(event);
 
   const inputSchema = z.object({
-    data: z.record(z.any()).optional() // 'data' is an optional JSON object
+    data: z.record(z.any()).optional()
   });
 
 

@@ -1,6 +1,6 @@
 import { EventHandlerRequest, H3Event, getRequestHeader } from "h3"
 
-export async function useUserData(event: H3Event<EventHandlerRequest>) {
+export async function getUser(event: H3Event<EventHandlerRequest>) {
   const auth = getRequestHeader(event, 'Authorization')
   const token = auth?.replace('Bearer ', '')
   if (token) {

@@ -1,4 +1,4 @@
-import { useUserData } from "~~/utils/userData"
+import { getUser } from "~~/utils/getUser"
 import { getRequestURL, handleCors } from "h3"
 
 
@@ -19,7 +19,7 @@ export default eventHandler(async (event) => {
     }
   })
 
-  const user = await useUserData(event)
+  const user = await getUser(event)
   if (!user) {
     return new Response(`user not found`, { status: 401 })
   }
