@@ -1,9 +1,12 @@
 import { useUserData } from "~~/utils/userData"
-import { getRequestURL } from "h3"
+import { getRequestURL, handleCors } from "h3"
 
 
 export default eventHandler(async (event) => {
 
+  handleCors(event, {
+    origin: ['http://localhost:8080']
+  })
   const url = getRequestURL(event)
   const originUrl = new URL(process.env.ELECTRIC_URL)
 

@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './board.scss'
 import './toolbar.scss'
 import './item.scss'
 
 import clsx from "clsx";
+import { useShape } from "@electric-sql/react"
 
 
 export function Board() {
@@ -12,6 +13,20 @@ export function Board() {
   const [stacked, setStacked] = useState<boolean>(false);
 
   const columns = ['Todo', 'Doing', 'Done'];
+  const url = import.meta.env.VITE_ELECTRIC_URL as string
+  const { data, isLoading } = useShape({
+    url,
+    params: {
+      table: 'todos'
+    },
+    onError: (error) => {
+      alert(error)
+    },
+    headers: {
+      Authorization: `Bearer 123`
+    }
+  })
+
 
   return (<>
         <div className="toolbar">
@@ -24,9 +39,7 @@ export function Board() {
                    onClick={() => setSelected(column)}>
                 <h2>{column}</h2>
                 <ul>
-                  {[...Array(10)].map((_, i) => (
-                      <Item key={i} title={`Item ${i}`}/>
-                  ))}
+                  {isLoading ? <Skeleton/> : data.map(Item)}
                 </ul>
               </div>
           ))}
@@ -37,6 +50,12 @@ export function Board() {
 
 type ItemProps = {
   title: string
+}
+
+function Skeleton() {
+  return [...Array(10)].map((_, i) => (
+      <Item key={i} title={`Item ${i}`}/>
+  ))
 }
 
 function Item(props: ItemProps) {
