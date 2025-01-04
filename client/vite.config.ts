@@ -1,12 +1,13 @@
 import { defineConfig, UserConfig } from 'vite'
-import  react  from '@vitejs/plugin-react'
+import react from '@vitejs/plugin-react'
+
 
 export default defineConfig(() => {
   return {
     plugins: [react()],
     envDir: '../',
     server: {
-      port: 8080,
+      port: 8080
     }
-  } as UserConfig
+  } satisfies UserConfig
 })
