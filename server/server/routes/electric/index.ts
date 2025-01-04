@@ -19,35 +19,27 @@ export default eventHandler(async (event) => {
     }
   })
 
-  //
-  // Authentication and authorization
-  //
-
   const user = await useUserData(event)
-
-  // If the user isn't set, return 401
   if (!user) {
     return new Response(`user not found`, { status: 401 })
   }
-
   // Only query data the user has access to unless they're an admin.
   if (!user.roles.includes(`admin`)) {
     originUrl.searchParams.set('where', `id='${user.id}'`)
-   // return originUrl.searchParams.get('where')
   }
 
 
-  // When proxying long-polling requests, content-encoding &
-  // content-length are added erroneously (saying the body is
-  // gzipped when it's not) so we'll just remove them to avoid
-  // content decoding errors in the browser.
-  //
-  // Similar-ish problem to https://github.com/wintercg/fetch/issues/23
   let resp = await fetch(originUrl.toString())
   if (resp.headers.get(`content-encoding`)) {
     const headers = new Headers(resp.headers)
     headers.delete(`content-encoding`)
     headers.delete(`content-length`)
+    // When proxying long-polling requests, content-encoding &
+    // content-length are added erroneously (saying the body is
+    // gzipped when it's not) so we'll just remove them to avoid
+    // content decoding errors in the browser.
+    //
+    // Similar-ish problem to https://github.com/wintercg/fetch/issues/23
     resp = new Response(resp.body, {
       status: resp.status,
       statusText: resp.statusText,

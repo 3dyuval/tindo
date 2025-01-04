@@ -6,8 +6,8 @@ export async function useUserData(event: H3Event<EventHandlerRequest>) {
   if (token) {
     return {
       token: token,
-      id: 'ecf48956-f7ef-4b76-885c-58f76a4f3d66',
-      roles: ['actor'],
+      id: '5fceeb58-71e7-43fb-801d-466b4ead1959',
+      roles: ['admin'],
     }
   }
 }
