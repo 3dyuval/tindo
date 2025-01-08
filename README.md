@@ -3,7 +3,7 @@
 **Prerequisites**
 
 - node
-- pnpm
+- pnp
 
 **How to Run**
 

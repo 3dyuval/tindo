@@ -1,15 +1,11 @@
 import { assertMethod, handleCors, isMethod } from "h3"
 import { getUser } from "~~/utils/getUser"
-import { z } from "zod"
-import pg from 'pg'
+import { Pool } from '@neondatabase/serverless';
 
 
-const pool = new pg.Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-  database: 'electric'
+const pool = new Pool({
+  connectionString: process.env.DB_URL,
+  database: 'todos'
 });
 
 
