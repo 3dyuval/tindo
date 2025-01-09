@@ -1,17 +1,7 @@
 import { assertMethod, handleCors, isMethod } from "h3"
 import { getUser } from "~~/utils/getUser"
 import { z } from "zod"
-import pg from 'pg'
-
-
-const pool = new pg.Pool({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-  database: 'electric'
-});
-
+import { pool } from "~~/utils/useDb"
 
 export default eventHandler(async (event) => {
   handleCors(event, {
@@ -46,7 +36,7 @@ export default eventHandler(async (event) => {
 
 
   try {
-    const client = await pool.connect()
+    const client = await pool('todos').connect()
 
     const result = await client.query(query, [user.id, data]);
     const newTodo = result.rows[0];
