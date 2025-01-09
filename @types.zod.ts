@@ -15,10 +15,18 @@ export type Actor = z.infer<typeof actorSchema>;
 export const todoSchema = z.object({
   id: z.string().uuid(),
   creator_id: z.string().uuid(),
-  data: z.record(z.any()),
   created_at: z.string().datetime(),
   updated_at: z.string().datetime(),
+  do_state: z.union([z.literal('todo'), z.literal('doing'), z.literal('done')]),
+  data: todoBody,
 });
 
-// TypeScript type for Todo
 export type Todo = z.infer<typeof todoSchema>;
+
+// Base TodoSimple schema
+export const todoBody = z.object({
+  type: z.literal('data'), // Discriminator field
+  title: z.string(),
+});
+
+

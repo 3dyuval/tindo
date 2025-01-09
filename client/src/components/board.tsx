@@ -5,7 +5,7 @@ import './item.scss'
 
 import clsx from "clsx";
 import { useShape } from "@electric-sql/react"
-import { Todo } from "../../../server/types.ts"
+import { Todo } from "../../../@types.zod.ts"
 import { useAuth0 } from '@auth0/auth0-react';
 
 

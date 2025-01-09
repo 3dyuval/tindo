@@ -1,6 +1,6 @@
 
 export default defineNitroConfig({
-  srcDir: "server",
+  srcDir: "src",
   compatibilityDate: "2024-12-25",
   experimental: {
     websocket: true
