@@ -1,12 +1,13 @@
 import { pgTable, uuid, varchar, timestamp, integer, jsonb } from 'drizzle-orm/pg-core';
-import { pool } from './server/utils/useDb'
-
-import { drizzle } from 'drizzle-orm/node-postgres';
+import { pool } from '../../utils/useDb'
+import postgres from 'postgres';
+import { drizzle } from 'drizzle-orm/postgres-js';
 
 import { config } from 'dotenv'
 config({ path: '.src/.env' })
 // Initialize Drizzle ORM
-export const db = drizzle(process.env.DB_URL as string);
+const client = postgres(process.env.DB_DRIZZLE_URL!);
+export const db = drizzle({ client });
 
 /**
  * Actors Table
