@@ -9,18 +9,18 @@ SQL Query:
 */
 -- Insert Actors
 INSERT INTO actors (name, email) VALUES
-(Alice', 'alice@example.com'),
-(Bob', 'bob@example.com'),
-(Charlie', 'charlie@example.com');
+('Alice', 'alice@example.com'),
+('Bob', 'bob@example.com'),
+('Charlie', 'charlie@example.com');
 
 -- Insert Tags
-INSERT INTO tags (id, name) VALUES
+INSERT INTO tags (tag_id) VALUES
 ('Work'),
 ('Personal');
 
 -- Actor1 creates a todo
 INSERT INTO todos (creator_id, data) VALUES
-('5fceeb58-71e7-43fb-801d-466b4ead1959', '{"title": "Project Proposal"}');
+('e866a326-a38a-4ffc-811e-684365467179', '{"title": "Project Proposal"}');
 
 -- Actor1 adds collaborators to the todo
 INSERT INTO todo_collaborators (todo_id, actor_id) VALUES
