@@ -3,6 +3,6 @@ export default defineNitroConfig({
   srcDir: "src",
   compatibilityDate: "2024-12-25",
   experimental: {
-    websocket: true
+    asyncContext: true
   }
 });

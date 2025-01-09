@@ -4,13 +4,13 @@ dotenv.config({path: '../.env'});
 import { env } from "std-env";
 
 
-if (!env.DB_URL) {
+if (!env.DB_URL_REMOTE) {
   throw new Error('DB_URL environment variable is not set');
 }
 
 const pool = (database: string) => new Pool({
-  connectionString: env.DB_URL,
+  connectionString: env.DB_URL_REMOTE,
 });
 
-const sql = neon(env.DB_URL);
+const sql = neon(env.DB_URL_REMOTE);
 export { pool, sql }
