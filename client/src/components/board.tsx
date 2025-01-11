@@ -10,8 +10,8 @@ import { $items } from "../todos.store";
 
 export function Board() {
 
-  const [category, setCategory] = useState<string | null>('kanban');
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selectedBoardType, setSelectedBoardType] = useState<string | null>('kanban');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [stacked, setStacked] = useState<boolean>(false);
 
   const boardTypes = {
@@ -28,7 +28,7 @@ export function Board() {
   return (<>
         <div className="toolbar">
           <button onClick={() => setStacked(!stacked)}>Stacked</button>
-          <select onChange={(e) => setCategory(e.target.value)}>
+          <select onChange={(e) => setSelectedBoardType(e.target.value)} value={selectedBoardType}>
             {Object.entries((boardTypes)).map(([type, categories]) => (
                 <option key={type} value={type}>{type}</option>
             ))}
@@ -36,11 +36,11 @@ export function Board() {
         </div>
         <div className={clsx('board', { stacked })}>
           {Object.entries(boardTypes)
-              .filter(([type]) => type === category)
+              .filter(([type]) => type === selectedBoardType)
               .flatMap(([type, categories]) => categories.map((category) => (
                   <div key={category}
-                       className={clsx('column', { selected: selected === category })}
-                       onClick={() => setSelected(category)}>
+                       className={clsx('column', { selected: selectedCategory === category })}
+                       onClick={() => setSelectedCategory(category)}>
                     <div className="toolbar">
                       <h2>{category}</h2>
                       <AddTodo
