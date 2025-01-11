@@ -1,6 +1,7 @@
 import { atom } from 'xoid'
 import { Item } from '~/@types.zod'
 
+
 const getLocalStorage = (key) => JSON.parse(localStorage.getItem(key))
 
 const setLocalStorage = (key) => (state) =>
@@ -14,8 +15,8 @@ export const $items = atom(
       add(item: Item) {
         a.update((items) => [...items, item])
       },
-      getItemActions(id: string) {
-        const $item = a.focus<Item>((items) => items.find(i => i.id === id))
+      getItemActions: (index: number) => {
+        const $item = a.focus(index)
         return {
           setCategory(category: string) {
             $item.update(item => ({ ...item, category }))

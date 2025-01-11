@@ -10,12 +10,37 @@
   margin: 0;
 }
 
+ body{
+   max-height: 100vh;
+   min-height: 100vh;
+
+  ::-webkit-scrollbar
+  {
+    width: 10px;
+    background-color: #F5F5F5;
+  }
+
+  ::-webkit-scrollbar-thumb
+  {
+    background-color: #888;
+  }
+
+}
+
+ul {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 body {
+
   /* 3. Add accessible line-height */
   line-height: 1.5;
   /* 4. Improve text rendering */
   -webkit-font-smoothing: antialiased;
 }
+
 
 /* 5. Improve media defaults */
 img, picture, video, canvas, svg {

@@ -15,13 +15,15 @@
   "dependencies": {
     "@electric-sql/react": "1.0.0-beta.2",
     "@lit/react": "^1.0.6",
+    "@phosphor-icons/react": "^2.1.7",
     "@vitejs/plugin-react": "^4.3.4",
     "@xoid/react": "1.0.0-beta.12",
     "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
     "lit": "^3.2.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "vite": "^6.0.3",
+    "vite": "link:@phosphor-icons/unplugin/vite",
     "xoid": "1.0.0-beta.12"
   }
 }

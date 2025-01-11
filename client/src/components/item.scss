@@ -1,9 +1,31 @@
 .board {
 
   .item {
+    background-color: white;
     padding: 10px;
     min-height: 300px;
     max-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      span {
+        font-size: 1.2rem;
+        color: #999;
+      }
+    }
+    .toolbar {
+      visibility: hidden;
+    }
+    &:focus, &:hover {
+      .toolbar {
+        visibility: visible;
+      }
+    }
   }
 
 }

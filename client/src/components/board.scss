@@ -1,10 +1,22 @@
+.board-container {
+
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  .board-toolbar {
+    padding: 1rem;
+  }
+}
+
 .board {
 
+  flex: 1;
+  overflow-y: hidden;
+  border: 1px solid black;
   &.stacked {
-
     .column.selected {
       flex-grow: 1;
-
     }
 
     ul {
@@ -26,15 +38,23 @@
 
   }
 
-  max-height: 100vh;
-  min-height: 100vh;
-  overflow-y: hidden;
-  padding: 0 10px;
 
   .column {
-    max-height: 100vh;
-    overflow-y: auto;
-    //scrollbar-gutter: stable both-edges;
+    padding: 10px;
+
+    &:focus-within {
+      background-color: var(--primary-focus);
+
+      &::-webkit-scrollbar {
+        background-color: var(--primary-focus);
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: var(--primary);
+      }
+    }
+    flex: 1;
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
     border: 1px solid black;
 
     h2 {
@@ -53,12 +73,10 @@
   @media (max-width: 768px) {
     display: flex;
     flex-direction: column;
-    padding: 0;
 
     .column {
-
-      flex: 1;
-
+      //
+      //flex: 1;
       &:not(.selected) {
         overflow: hidden;
         flex: 0 0 50px;

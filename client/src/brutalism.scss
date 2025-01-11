@@ -1,6 +1,11 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
 
+:root {
+  --primary: #352ddc;
+  --primary-focus: #007bff;
+}
+
 /* Basic Reset */
 * {
   margin: 0;
@@ -68,16 +73,15 @@ button, .button {
   color: #000;
   background-color: #fff;
   border: 2px solid #000;
-  box-shadow: 4px 4px 0 #000;
   cursor: pointer;
-  transition: all 0.2s ease;
 
   &.secondary, &.teriary {
+
     border: 1px solid #171717;
-    box-shadow: none;
   }
 
   &.tertiary {
+    transform: translateY(-1px);
     background-color: #a6a6a6;
   }
 }
@@ -92,12 +96,20 @@ button:hover, .button:hover {
 
 /* Forms */
 input, textarea, select {
+  &:disabled {
+    opacity: 0.5;
+  }
   width: 100%;
   padding: 0.75rem;
   //margin-bottom: 1rem;
   border: 2px solid #000;
   box-shadow: 4px 4px 0 #000;
   font-family: 'Roboto Mono', monospace;
+
+  &:focus {
+    outline: 1px solid var(--primary-focus);
+    outline-offset: -2px;
+  }
 }
 
 textarea {
@@ -199,7 +211,6 @@ select[multiple] {
   height: 100%;
   background-color: #000;
   width: 0;
-  transition: width 0.2s ease;
 }
 
 .progress-bar-25 { width: 25%; }
