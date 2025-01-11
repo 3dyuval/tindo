@@ -67,13 +67,13 @@ export function Board() {
 }
 
 function Skeleton({ type, category }: { category: string, type: string }) {
-  return [...Array(10)].map((_, i) => (
+  return [...Array(3)].map((_, i) => (
       <Item id={crypto.randomUUID()} category={category} type={type}/>
   ))
 }
 
 function Item({ body, creator_id, created_at, updated_at, id }: Item) {
-  return <li className="item" key={id}>
+  return <li className="item box" key={id}>
     {JSON.stringify(body, null, 2)}
     <p>Created by {creator_id}</p>
     <p>Created at {created_at}</p>
