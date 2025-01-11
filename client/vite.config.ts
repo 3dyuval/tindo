@@ -8,5 +8,11 @@ export default defineConfig(() => {
     server: {
       port: 8080
     },
+    resolve: {
+      alias: {
+        '~/': '../',
+        '@': './src'
+      }
+    }
   } satisfies UserConfig
 })
