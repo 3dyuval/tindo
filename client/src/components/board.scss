@@ -1,5 +1,31 @@
 .board {
 
+  &.stacked {
+
+    .column.selected {
+      flex-grow: 1;
+
+    }
+
+    ul {
+      position: relative;
+
+      .item {
+        &:not(:first-child) {
+          display: none;
+        }
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translateY(50%);
+        width: 100%;
+
+      }
+    }
+
+  }
+
   max-height: 100vh;
   min-height: 100vh;
   overflow-y: hidden;
@@ -32,6 +58,7 @@
     .column {
 
       flex: 1;
+
       &:not(.selected) {
         overflow: hidden;
         flex: 0 0 50px;

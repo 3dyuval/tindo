@@ -39,14 +39,16 @@ export function Board() {
               .filter(([type]) => type === category)
               .flatMap(([type, categories]) => categories.map((category) => (
                   <div key={category}
-                       className={clsx('category', { selected: selected === category })}
+                       className={clsx('column', { selected: selected === category })}
                        onClick={() => setSelected(category)}>
-                    <h2>{category}</h2>
-                    <ul>
+                    <div className="toolbar">
+                      <h2>{category}</h2>
                       <AddTodo
                           category={category}
                           type={type}
                       />
+                    </div>
+                    <ul>
                       {
                         isLoading
                             ? <Skeleton
