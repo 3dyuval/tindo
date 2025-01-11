@@ -26,3 +26,8 @@ export const itemSchema = z.object({
 
 export type Item = z.infer<typeof itemSchema>;
 
+const boardConfig = z.object({
+  boardTypes: z.record(z.string(), z.array(z.string()))
+})
+
+export type BoardConfig = z.infer<typeof boardConfig>;

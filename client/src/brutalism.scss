@@ -71,10 +71,23 @@ button, .button {
   box-shadow: 4px 4px 0 #000;
   cursor: pointer;
   transition: all 0.2s ease;
+
+  &.secondary, &.teriary {
+    border: 1px solid #171717;
+    box-shadow: none;
+  }
+
+  &.tertiary {
+    background-color: #a6a6a6;
+  }
 }
 
 button:hover, .button:hover {
   box-shadow: 6px 6px 0 #000;
+
+  &.secondary, &.tertiary {
+    box-shadow: 2px 2px 0 #000;
+  }
 }
 
 /* Forms */
@@ -154,7 +167,7 @@ select[multiple] {
 }
 
 /* Modals */
-.modal {
+.dialog {
   display: none;
   position: fixed;
   top: 0;
@@ -166,7 +179,7 @@ select[multiple] {
   align-items: center;
 }
 
-.modal-content {
+.dialog-content {
   background-color: #fff;
   padding: 2rem;
   border: 2px solid #000;

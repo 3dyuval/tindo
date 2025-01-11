@@ -24,3 +24,8 @@ dist-ssr
 *.sw?
 
 client/.env
+.data
+.nitro
+.cache
+.output
+.env

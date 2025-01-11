@@ -56,7 +56,7 @@ export function Board() {
                                 type={type}
                             />
                             : items.filter(i => i.category === category)
-                                .map((item) => <Item {...item} />)
+                                .map((item) => <Item {...item} categories={boardTypes[type]}/>)
                       }
                     </ul>
                   </div>
@@ -72,13 +72,49 @@ function Skeleton({ type, category }: { category: string, type: string }) {
   ))
 }
 
-function Item({ body, creator_id, created_at, updated_at, id }: Item) {
+function Item(props: Item) {
+  const { body, creator_id, created_at, updated_at, id } = props
+
   return <li className="item box" key={id}>
     {JSON.stringify(body, null, 2)}
-    <p>Created by {creator_id}</p>
-    <p>Created at {created_at}</p>
-    <p>Updated at {updated_at}</p>
+    <div className="toolbar">
+      <p>Created by {creator_id}</p>
+      <p>Created at {created_at}</p>
+      <p>Updated at {updated_at}</p>
+      <EditItem {...props} />
+    </div>
   </li>
+}
+
+
+function EditItem(props: Item & { categories: string[] }) {
+
+  const [editing, setEditing] = useState(false)
+  const [_, { getItemActions }] = useAtom($items, true)
+
+  const { categories, category, id, body } = props
+  // const { setCategory } = getItemActions(id)
+
+  function setCategory(newCategory: string) {
+    return
+  }
+
+  return (<>
+    <button className="secondary" type="button" onClick={() => setEditing(true)}>...</button>
+    <div className="dialog" style={{ display: editing ? 'flex' : 'none' }}>
+      <div className="dialog-content">
+        <div>
+          <select onChange={(e) => setCategory(e.target.value)} value={category}>
+            {categories.map(category => <option key={category} value={category}>{category}</option>)}
+          </select>
+        </div>
+        <div className="toolbar">
+          <button className="tertiary" onClick={() => setEditing(false)}>❎</button>
+          <button className="secondary" type="submit">☑️</button>
+        </div>
+      </div>
+    </div>
+  </>)
 }
 
 function AddTodo(props: { category: string, type: string }) {
