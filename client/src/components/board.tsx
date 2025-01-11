@@ -2,50 +2,47 @@ import React, { useState } from "react";
 import './board.scss'
 import './toolbar.scss'
 import './item.scss'
-
 import clsx from "clsx";
-import { useShape } from "@electric-sql/react"
-import { Todo } from "../../../server/types.ts"
+import { $items } from "@/todos.store.ts";
+import type { Item } from '~/@types.zod'
+import { useAtom } from '@xoid/react'
 
-
-type KanBanTodo = Todo & { data: { title: string, column: string } }
 
 export function Board() {
 
   const [selected, setSelected] = useState<string | null>(null);
   const [stacked, setStacked] = useState<boolean>(false);
-  const columns = ['Todo', 'Doing', 'Done'];
 
-  const { data, isLoading } = useShape<KanBanTodo>({
-    url: import.meta.env.VITE_ELECTRIC_URL,
-    params: {
-      table: 'todos'
-    },
-    onError: (error) => {
-      console.error(error)
-      alert(error.message)
-    },
-    headers: {
-      Authorization: `Bearer 123`
-    }
-  })
+  const boardTypes = {
+    'kanban': ['todo', 'doing', 'done'],
+    'memo': ['memo', 'idea', 'note', 'quote', 'joke'],
+    'mood': ['happy', 'sad', 'angry', 'scared', 'tired'],
+    'work': ['work', 'home', 'school', 'errands', 'chores'],
+    'personal': ['personal', 'family', 'friends', 'pets', 'hobbies'],
+  }
 
+  const isLoading = false;
+  const items = useAtom($items)
 
   return (<>
         <div className="toolbar">
           <button onClick={() => setStacked(!stacked)}>Stacked</button>
         </div>
         <div className={clsx('board', { stacked })}>
-          {columns.map((column) => (
-              <div key={column}
-                   className={clsx('column', { selected: selected === column })}
-                   onClick={() => setSelected(column)}>
-                <h2>{column}</h2>
+          {Object.entries(boardTypes).map(([type, categories]) => categories.map((category) => (
+              <div key={category}
+                   className={clsx('category', { selected: selected === category })}
+                   onClick={() => setSelected(category)}>
+                <h2>{category}</h2>
                 <ul>
-                  {data && !data.length && <AddTodo column={column}/>}
-                  {isLoading ? <Skeleton/> : data
-                      .filter(i => i.data.column === column)
-                      .map(i => <Item {...i} />)}
+                  <AddTodo category={category} type={type}/>
+                  {
+                    isLoading
+                        ? <Skeleton category={category} type={type}/>
+                        : items
+                            .filter(i => i.category === category)
+                            .map(item => <Item {...item} />)
+                  }
                 </ul>
               </div>
           ))}
@@ -54,41 +51,37 @@ export function Board() {
   )
 }
 
-function Skeleton() {
+function Skeleton({ type, category }: { category: string, type: string }) {
   return [...Array(10)].map((_, i) => (
-      <Item data={{ id: i, title: `Item ${i}` }}/>
+      <Item  id={crypto.randomUUID()} category={category} type={type} />
   ))
 }
 
-function Item({ data, creator_id, created_at, updated_at }: KanBanTodo) {
-  return <li className="item" key={data.id}>
-    {JSON.stringify(data, null, 2)}
+function Item({ body, creator_id, created_at, updated_at, id }: Item) {
+  return <li className="item" key={id}>
+    {JSON.stringify(body, null, 2)}
     <p>Created by {creator_id}</p>
     <p>Created at {created_at}</p>
     <p>Updated at {updated_at}</p>
   </li>
 }
 
-function AddTodo(props: { column: string }) {
+function AddTodo(props: { category: string, type: string }) {
 
-  const url = import.meta.env.VITE_BASE_SERVER_URL
+  const [, { add }] = useAtom($items, true)
 
   function addItem() {
     const todoTitle = prompt('What do you want to do?')
-    if (todoTitle) {
-      fetch(`${url}/todos`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer 123`
 
-        },
-        body: JSON.stringify({
-          data: {
-            title: todoTitle,
-            column: props.column
-          }
-        })
+    if (todoTitle) {
+
+      add({
+        id: crypto.randomUUID(),
+        category: props.category,
+        type: props.type,
+        body: {
+          title: todoTitle
+        }
       })
     }
   }

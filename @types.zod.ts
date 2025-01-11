@@ -12,13 +12,17 @@ export const actorSchema = z.object({
 export type Actor = z.infer<typeof actorSchema>;
 
 // Zod schema for Todo
-export const todoSchema = z.object({
+export const itemSchema = z.object({
   id: z.string().uuid(),
   creator_id: z.string().uuid(),
-  data: z.record(z.any()),
   created_at: z.string().datetime(),
   updated_at: z.string().datetime(),
-});
+  type: z.string(),
+  category: z.string(),
+  body: z.object({
+    title: z.string(),
+  })
+})
 
-// TypeScript type for Todo
-export type Todo = z.infer<typeof todoSchema>;
+export type Item = z.infer<typeof itemSchema>;
+
