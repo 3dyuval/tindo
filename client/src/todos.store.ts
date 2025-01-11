@@ -1,8 +1,12 @@
 import { atom } from 'xoid'
 import { Item } from '~/@types.zod'
 
+const getLocalStorage = (key) => JSON.parse(localStorage.getItem(key))
 
-const initialItems = [] as Item[]
+const setLocalStorage = (key) => (state) =>
+    localStorage.setItem(key, JSON.stringify(state))
+
+const initialItems = getLocalStorage('items') || [] as Item[]
 
 export const $items = atom(
     initialItems
@@ -26,4 +30,6 @@ export const $items = atom(
       }
     })
 )
+
+$items.subscribe(setLocalStorage('items'))
 

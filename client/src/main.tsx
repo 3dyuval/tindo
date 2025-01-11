@@ -5,6 +5,9 @@ import './styles.scss'
 
 const rootDomNode = document.querySelector<HTMLDivElement>('#app')!;
 
+localStorage['client-id'] ??= crypto.randomUUID()
+
+
 function main() {
   const root = createRoot(rootDomNode);
   root.render(<Board/>);
