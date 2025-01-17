@@ -14,7 +14,7 @@
   flex: 1;
   overflow-y: hidden;
   border: 1px solid black;
-  &.stacked {
+  &.focused {
     .column.selected {
       flex-grow: 1;
     }

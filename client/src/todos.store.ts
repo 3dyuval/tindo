@@ -25,7 +25,7 @@ export const $items = atom(
             $item.update(item => ({ ...item, body }))
           },
           remove() {
-            a.update((items) => items.filter(i => i.id !== id))
+            a.update((items) => items.filter((i, _index) => index !== _index))
           }
         }
       }

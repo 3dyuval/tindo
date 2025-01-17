@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { Board } from "./components/board.tsx";
+import { Board } from "./components/board-swiper.tsx";
 import './styles.scss'
 
 

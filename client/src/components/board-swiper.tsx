@@ -9,7 +9,10 @@ import { useAtom } from '@xoid/react'
 import { $items } from "../todos.store";
 import { format, parseISO } from 'date-fns'
 import { CheckFat, X } from "@phosphor-icons/react";
-
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import { EffectCards, Navigation, Pagination, Scrollbar } from 'swiper/modules';
+import './board-swiper.scss'
 
 export function Board() {
 
@@ -31,7 +34,7 @@ export function Board() {
 
   const items = useAtom($items)
 
-  return (<div class='board-container'>
+  return (<div className="board-container">
         <div className="toolbar board-toolbar">
           <button onClick={() => setFocused(!focused)}>focused</button>
           <select onChange={(e) => setSelectedBoardType(e.target.value)} value={selectedBoardType}>
@@ -57,14 +60,37 @@ export function Board() {
                           type={type}
                       />
                     </div>
-                    <ul>
+
+                    <Swiper
+                        modules={[EffectCards, Scrollbar]}
+                        direction="vertical"
+                        effect='cards'
+                        scrollbar
+                        loop
+                    >
                       {items
                           .filter(i => i.category === category)
-                          .map((item) =>
-                              <Item {...item} config={config} key={item.id}/>
+                          .map((item) => {
+                                const { id, body } = item
+
+                                itemSchema.parse(item)
+
+                                return <SwiperSlide tag="li" key={id} className="item box">
+                                  <div className="item-header"><h3>{body.title}</h3><span>{body.priority}</span></div>
+                                  <div className="toolbar">
+                                    <p>Created by {item.created_by.slice(0, 5)}</p>
+                                    <p>Created at {format(parseISO(item.created_at), config.dateString)}</p>
+                                    {item.updated_at &&
+                                        <p>Updated at {format(parseISO(item.updated_at), config.dateString)}</p>}
+                                    {item.updated_by &&
+                                        <p>Updated by {format(parseISO(item.updated_by), config.dateString)}</p>}
+                                    <EditItem {...item} config={config}/>
+                                  </div>
+                                </SwiperSlide>
+                              }
                           )
                       }
-                    </ul>
+                    </Swiper>
                   </div>
               )))
           }
@@ -73,24 +99,6 @@ export function Board() {
   )
 }
 
-function Item(props: Item & { config: BoardConfig }) {
-  const { id, body } = props
-
-  const { config, ...item } = props
-
-  itemSchema.parse(item)
-
-  return <li className="item box" key={id}>
-    <div className="item-header"><h3>{body.title}</h3><span>{body.priority}</span></div>
-    <div className="toolbar">
-      <p>Created by {props.created_by.slice(0, 5)}</p>
-      <p>Created at {format(parseISO(props.created_at), config.dateString)}</p>
-      {props.updated_at && <p>Updated at {format(parseISO(props.updated_at), config.dateString)}</p>}
-      {props.updated_by && <p>Updated by {format(parseISO(props.updated_by), config.dateString)}</p>}
-      <EditItem {...props} />
-    </div>
-  </li>
-}
 
 
 function EditItem(props: Item & { config: BoardConfig }) {
@@ -115,7 +123,7 @@ function EditItem(props: Item & { config: BoardConfig }) {
       <div className="dialog-content">
         <label>
           Title
-          <input type="text" readOnly onClick={handleChangeTitle} value={body.title} />
+          <input type="text" readOnly onClick={handleChangeTitle} value={body.title}/>
         </label>
         <label>
           Option
@@ -127,9 +135,12 @@ function EditItem(props: Item & { config: BoardConfig }) {
           Priority
           <input type="number" defaultValue={body.priority} min={-3} max={3} step={1}/>
         </label>
+        <div className="alert warning">
+          Delete this item? <input type="button" value="Delete" onClick={() => remove()}/>
+        </div>
         <div className="toolbar">
           <button className="secondary" onClick={() => setEditing(false)}><X size={28}/></button>
-          <button className="tertiary"  onClick={() => setEditing(false)}><CheckFat weight="fill" size={28}/></button>
+          <button className="tertiary" onClick={() => setEditing(false)}><CheckFat weight="fill" size={28}/></button>
         </div>
       </div>
     </div>
