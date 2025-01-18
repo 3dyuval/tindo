@@ -51,4 +51,4 @@ const config = z.object({
   disableConfirmAddItem: z.boolean()
 })
 
-export type BoardConfig = z.infer<typeof config>;
+export type UserConfig = z.infer<typeof config>;

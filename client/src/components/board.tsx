@@ -3,13 +3,12 @@ import './board.scss'
 import './toolbar.scss'
 import './item.scss'
 import clsx from "clsx";
-import type { BoardConfig, Item } from '../../../@types.zod'
+import type { UserConfig, Item } from '../../../@types.zod'
 import { itemSchema } from '../../../@types.zod'
 import { useAtom } from '@xoid/react'
 import { $items } from "../todos.store";
 import { format, parseISO } from 'date-fns'
-import { CheckFat, X } from "@phosphor-icons/react";
-
+import 'remixicon/fonts/remixicon.css'
 
 export function Board() {
 
@@ -17,7 +16,7 @@ export function Board() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [stacked, setStacked] = useState<boolean>(false);
 
-  const config: BoardConfig = {
+  const config: UserConfig = {
     boardTypes: {
       'kanban': ['todo', 'doing', 'done'],
       'memo': ['memo', 'idea', 'note', 'quote', 'joke'],
@@ -73,7 +72,7 @@ export function Board() {
   )
 }
 
-function Item(props: Item & { config: BoardConfig }) {
+function Item(props: Item & { config: UserConfig }) {
   const { id, body } = props
 
   const { config, ...item } = props
@@ -93,7 +92,7 @@ function Item(props: Item & { config: BoardConfig }) {
 }
 
 
-function EditItem(props: Item & { config: BoardConfig }) {
+function EditItem(props: Item & { config: UserConfig }) {
 
   const [editing, setEditing] = useState(false)
   const [items, { getItemActions }] = useAtom($items, true)
@@ -128,15 +127,15 @@ function EditItem(props: Item & { config: BoardConfig }) {
           <input type="number" defaultValue={body.priority} min={-3} max={3} step={1}/>
         </label>
         <div className="toolbar">
-          <button className="secondary" onClick={() => setEditing(false)}><X size={28}/></button>
-          <button className="tertiary"  onClick={() => setEditing(false)}><CheckFat weight="fill" size={28}/></button>
+          <button className="ri-delete-back-fill x secondary" onClick={() => setEditing(false)}></button>
+          <button className="ri-check-line tertiary"  onClick={() => setEditing(false)}></button>
         </div>
       </div>
     </div>
   </>)
 }
 
-function AddItem(props: Item & { config: BoardConfig }) {
+function AddItem(props: Item & { config: UserConfig }) {
 
   const { config, category, type } = props
   const [adding, setAdding] = useState(false)
@@ -182,8 +181,8 @@ function AddItem(props: Item & { config: BoardConfig }) {
           </select>
         </div>
         <div className="toolbar">
-          <button className="secondary" onClick={() => setEditing(false)}><X size={28}/></button>
-          <button className="tertiary" onClick={() => setEditing(false)}><CheckFat weight="fill" size={28}/></button>
+          <button className="ri-delete-back-fill x secondary" onClick={() => setAdding(false)}></button>
+          <button className="ri-check-line tertiary" onClick={() => setAdding(false)}></button>
         </div>
       </div>
     </div>
