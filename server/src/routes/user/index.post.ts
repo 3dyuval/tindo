@@ -1,7 +1,16 @@
 import { sql } from "~~/utils/useDb";
-
+import { config } from "dotenv"
+config({ path: '../../../.env' });
 
 export default eventHandler(async (event) => {
+
+  const secret = getRequestHeader(event, 'x-admin-secret')
+
+  if (!secret || secret !== process.env.AUTH_ADMIN_SECRET) {
+    return new Response('Unauthorized', {
+      status: 401
+    })
+  }
 
   try {
 
