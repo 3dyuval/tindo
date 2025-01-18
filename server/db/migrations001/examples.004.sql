@@ -1,7 +1,7 @@
 
 /*
 4. An Actor Can Query All of Their Collaborators Based on a Tag
-Objective: Retrieve all collaborators associated with todos linked to a specific tag for that actor.
+Objective: Retrieve all collaborators associated with todos linked to a specific tag for that user.
 
 SQL Query:
 */
@@ -19,25 +19,25 @@ INNER JOIN
 INNER JOIN
     todo_collaborators tc ON t.id = tc.todo_id
 INNER JOIN
-    actors ac ON tc.actor_id = ac.id
+    users ac ON tc.user_id = ac.id
 WHERE
     tg.name = :tag_name
-    AND (t.creator_id = :actor_id
+    AND (t.creator_id = :user_id
         OR t.id IN (
-            SELECT todo_id FROM todo_collaborators WHERE actor_id = :actor_id
+            SELECT todo_id FROM todo_collaborators WHERE user_id = :user_id
         ))
-    AND ac.id != :actor_id;
+    AND ac.id != :user_id;
 
  /*
 Explanation:
 
 Replace :tag_name with the name of the tag.
 
-Replace :actor_id with the ID of the actor.
+Replace :user_id with the ID of the user.
 
-The query selects collaborators (ac) associated with todos tagged with the specified tag (tg.name = :tag_name) and belonging to the actor (either as creator or collaborator).
+The query selects collaborators (ac) associated with todos tagged with the specified tag (tg.name = :tag_name) and belonging to the user (either as creator or collaborator).
 
-Excludes the actor themselves (ac.id != :actor_id).
+Excludes the user themselves (ac.id != :user_id).
 
 DISTINCT ensures each collaborator appears only once.
 

@@ -3,7 +3,7 @@ Authorization: Bearer 123
 
 ###
 
-GET http://localhost:3000/v1/shape?table=actors&offset=-1
+GET http://localhost:3000/v1/shape?table=users&offset=-1
 Authorization: Bearer 123
 
 ###

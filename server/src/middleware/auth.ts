@@ -29,7 +29,7 @@
 export default defineEventHandler(async (event) => {
   // get the bearer
   //validate
-  console.log('auth', event.auth)
+  // console.log('auth', await readBody(event))
 })
 
 // export default fromNodeMiddleware(auth({

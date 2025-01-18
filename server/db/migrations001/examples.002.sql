@@ -1,7 +1,7 @@
 
 /*
 2. Actor Can Query All of Their Tags Based on Their Todos
-Objective: Fetch all tags associated with the actor's todos.
+Objective: Fetch all tags associated with the user's todos.
 
 SQL Query:
 */
@@ -16,17 +16,17 @@ LEFT JOIN
 LEFT JOIN
     tags tg ON tt.tag_id = tg.id
 WHERE
-    t.creator_id = :actor_id
+    t.creator_id = :user_id
     OR t.id IN (
-        SELECT todo_id FROM todo_collaborators WHERE actor_id = :actor_id
+        SELECT todo_id FROM todo_collaborators WHERE user_id = :user_id
     );
 
  /*
 Explanation:
 
-Replace :actor_id with the ID of the actor.
+Replace :user_id with the ID of the user.
 
-Retrieves all tags (tg) linked to todos (t) where the actor is the creator or a collaborator.
+Retrieves all tags (tg) linked to todos (t) where the user is the creator or a collaborator.
 
 DISTINCT ensures that each tag appears only once.
 

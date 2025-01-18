@@ -1,32 +1,54 @@
 import { z } from 'zod';
 
 // Zod schema for Actor
-export const actorSchema = z.object({
+export const userSchema = z.object({
   id: z.string().uuid(),
   name: z.string().max(100),
   email: z.string().email().max(100),
-  created_at: z.string().datetime(),
+  created_at: z.string().datetime()
 });
 
 // TypeScript type for Actor
-export type Actor = z.infer<typeof actorSchema>;
+export type Actor = z.infer<typeof userSchema>;
+
+
+const listItemSchema = z.discriminatedUnion('type', [
+  z.object({
+    type: z.literal('text'),
+    title: z.string()
+  }),
+  z.object({
+    type: z.literal('todo'),
+    title: z.string(),
+    completed: z.boolean(),
+    due_date: z.string().datetime().optional()
+  })
+])
+
 
 // Zod schema for Todo
-export const todoSchema = z.object({
+export const itemSchema = z.object({
   id: z.string().uuid(),
-  creator_id: z.string().uuid(),
+  created_by: z.string().uuid(),
   created_at: z.string().datetime(),
-  updated_at: z.string().datetime(),
-  do_state: z.union([z.literal('todo'), z.literal('doing'), z.literal('done')]),
-  data: todoBody,
-});
-
-export type Todo = z.infer<typeof todoSchema>;
-
-// Base TodoSimple schema
-export const todoBody = z.object({
-  type: z.literal('data'), // Discriminator field
-  title: z.string(),
-});
+  updated_by: z.string().uuid().optional(),
+  updated_at: z.string().datetime().optional(),
+  type: z.string(),
+  category: z.string(),
+  body: z.object({
+    title: z.string().optional(),
+    list: z.array(listItemSchema).optional(),
+    priority: z.number().min(-3).max(3).default(0)
+  })
+})
 
 
+export type Item = z.infer<typeof itemSchema>;
+
+const config = z.object({
+  boardTypes: z.record(z.string(), z.array(z.string())),
+  dateString: z.string(),
+  disableConfirmAddItem: z.boolean()
+})
+
+export type UserConfig = z.infer<typeof config>;
