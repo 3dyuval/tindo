@@ -1,16 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './board.scss'
 import './toolbar.scss'
 import './item.scss'
 import clsx from "clsx";
-import type { UserConfig, Item } from '../../../@types.zod'
-import { itemSchema } from '../../../@types.zod'
+import type { Item, UserConfig } from '~/@types.zod'
+import { itemSchema } from '~/@types.zod'
 import { useAtom } from '@xoid/react'
 import { $items } from "../todos.store";
 import { format, parseISO } from 'date-fns'
 import 'remixicon/fonts/remixicon.css'
+import { useAuth0 } from '@auth0/auth0-react';
+import { useShape } from "@electric-sql/react"
+
 
 export function Board() {
+  const { user, isAuthenticated, loginWithPopup, getAccessTokenSilently } = useAuth0();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      getAccessTokenSilently().then(token => localStorage['token'] = token)
+    }
+  }, [isAuthenticated]);
 
   const [selectedBoardType, setSelectedBoardType] = useState<string | null>('kanban');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -28,11 +38,25 @@ export function Board() {
     disableConfirmAddItem: false
   }
 
-  const items = useAtom($items)
+  // const items = useAtom<Item[]>($items)
 
-  return (<div class='board-container'>
+  const { data: items, isLoading } = useShape<Item[]>({
+    url: `${import.meta.env.VITE_BASE_SERVER_URL}/electric`,
+    params: {
+      table: 'todos'
+    },
+    onError: (error) => {
+      console.error(error)
+      alert(error.message)
+    },
+    headers: {
+      Authorization: `Bearer ${localStorage['token']}`
+    }
+  })
+  return (<div class="board-container">
         <div className="toolbar board-toolbar">
           <button onClick={() => setStacked(!stacked)}>Stacked</button>
+          {isAuthenticated ? user.sub : <button onClick={loginWithPopup as any}>Login</button>}
           <select onChange={(e) => setSelectedBoardType(e.target.value)} value={selectedBoardType}>
             {Object.entries((config.boardTypes)).map(([type, categories]) => (
                 <option key={type} value={type}>{type}</option>
@@ -57,8 +81,8 @@ export function Board() {
                       />
                     </div>
                     <ul>
-                      {items
-                          .filter(i => i.category === category)
+                      {(items || [])
+                          .filter((i) => i.data?.category === category)
                           .map((item) =>
                               <Item {...item} config={config} key={item.id}/>
                           )
@@ -97,8 +121,8 @@ function EditItem(props: Item & { config: UserConfig }) {
   const [editing, setEditing] = useState(false)
   const [items, { getItemActions }] = useAtom($items, true)
 
-  const { category, id, body, config, type } = props
-  const categories = Object.values(config.boardTypes[type])
+  const {  id, body, config } = props
+  const categories = Object.values(config.boardTypes[body.type])
   const { setCategory, remove, setBody } = getItemActions(items.findIndex(i => i.id === id))
 
   function handleChangeTitle() {
@@ -114,11 +138,11 @@ function EditItem(props: Item & { config: UserConfig }) {
       <div className="dialog-content">
         <label>
           Title
-          <input type="text" readOnly onClick={handleChangeTitle} value={body.title} />
+          <input type="text" readOnly onClick={handleChangeTitle} value={body.title}/>
         </label>
         <label>
           Option
-          <select onChange={(e) => setCategory(e.target.value)} value={category}>
+          <select onChange={(e) => setCategory(e.target.value)} value={body.category}>
             {categories.map(category => <option key={category} value={category}>{category}</option>)}
           </select>
         </label>
@@ -128,16 +152,16 @@ function EditItem(props: Item & { config: UserConfig }) {
         </label>
         <div className="toolbar">
           <button className="ri-delete-back-fill x secondary" onClick={() => setEditing(false)}></button>
-          <button className="ri-check-line tertiary"  onClick={() => setEditing(false)}></button>
+          <button className="ri-check-line tertiary" onClick={() => setEditing(false)}></button>
         </div>
       </div>
     </div>
   </>)
 }
 
-function AddItem(props: Item & { config: UserConfig }) {
+function AddItem(props: Item & { config: UserConfig, type: string, category: string }) {
 
-  const { config, category, type } = props
+  const { config,  category, type } = props
   const [adding, setAdding] = useState(false)
   const [, { add }] = useAtom($items, true)
 
@@ -152,9 +176,9 @@ function AddItem(props: Item & { config: UserConfig }) {
       id: crypto.randomUUID(),
       created_by: localStorage['client-id'],
       created_at: new Date().toISOString(),
-      category: props.category,
-      type: props.type,
       body: {
+        category: category,
+        type: type,
         title: title
       }
     })

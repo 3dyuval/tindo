@@ -1,0 +1,15 @@
+POST http://localhost:4000/todos
+Authorization: Bearer 123
+
+{"data": { "title": "test", "column": "Todo" }}
+###
+
+
+GET http://localhost:4000/todos
+Authorization: Bearer 123
+###
+
+
+DELETE http://localhost:4000/todos/996caea5-8419-4bf1-876b-822f49b718cc
+Authorization: Bearer 123
+###

@@ -1,6 +1,6 @@
 import { defineConfig, UserConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-
+import * as path from "node:path"
 
 export default defineConfig(() => {
   return {
@@ -8,10 +8,11 @@ export default defineConfig(() => {
     server: {
       port: 8080
     },
+    envDir: '../',
     resolve: {
       alias: {
-        '~/': '../',
-        '@': './src'
+        '~': path.resolve(__dirname, '../'),
+        '@': path.resolve(__dirname, './src')
       }
     }
   } satisfies UserConfig

@@ -33,9 +33,9 @@ export const itemSchema = z.object({
   created_at: z.string().datetime(),
   updated_by: z.string().uuid().optional(),
   updated_at: z.string().datetime().optional(),
-  type: z.string(),
-  category: z.string(),
   body: z.object({
+    type: z.string(),
+    category: z.string(),
     title: z.string().optional(),
     list: z.array(listItemSchema).optional(),
     priority: z.number().min(-3).max(3).default(0)

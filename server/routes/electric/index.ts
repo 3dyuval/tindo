@@ -1,15 +1,26 @@
-import { useUserData } from "~~/utils/userData"
-import { getRequestURL, handleCors } from "h3"
+import { useUser } from "~~/utils/useUser"
+import { getRequestURL, H3Event, handleCors } from "h3"
 
 
-export default eventHandler(async (event) => {
+export default eventHandler(async (event: H3Event) => {
 
-  handleCors(event, {
-    origin: ['http://localhost:8080']
+
+  const handled = handleCors(event, {
+    origin: [process.env.NITRO_ALLOW_ORIGIN],
+    methods: '*',
+    allowHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
   })
-  const url = getRequestURL(event)
-  const originUrl = new URL(process.env.ELECTRIC_URL)
 
+
+  const user = await useUser(event)
+  if (!user) {
+    return new Response(`user not found`, { status: 401 })
+  }
+
+
+  const url = getRequestURL(event)
+  const originUrl = new URL(process.env.NITRO_ELECTRIC_URL)
 
   // Copy over the relevant query params that the Electric client adds
   // so that we return the right part of the Shape log.
@@ -19,13 +30,9 @@ export default eventHandler(async (event) => {
     }
   })
 
-  const user = await useUserData(event)
-  if (!user) {
-    return new Response(`user not found`, { status: 401 })
-  }
   // Only query data the user has access to unless they're an admin.
   if (!user.roles.includes(`admin`)) {
-    originUrl.searchParams.set('where', `id='${user.id}'`)
+    originUrl.searchParams.set('where', `creator_id='${user.id}'`)
   }
 
 

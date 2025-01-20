@@ -1,4 +1,4 @@
-# websocket with nitro + vite -monorepo template
+# Tindo
 
 **Prerequisites**
 

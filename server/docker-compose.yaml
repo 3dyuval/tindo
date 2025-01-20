@@ -1,0 +1,12 @@
+version: "3.3"
+name: "electric_sql"
+
+services:
+  electric:
+    image: electricsql/electric
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: ${NITRO_DB_URL_REMOTE}
+    ports:
+      - "3000:3000"
