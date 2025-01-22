@@ -53,7 +53,7 @@ export function Board() {
       Authorization: `Bearer ${localStorage['token']}`
     }
   })
-  return (<div class="board-container">
+  return (<div className="board-container">
         <div className="toolbar board-toolbar">
           <button onClick={() => setStacked(!stacked)}>Stacked</button>
           {isAuthenticated ? user.sub : <button onClick={loginWithPopup as any}>Login</button>}

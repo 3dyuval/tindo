@@ -7,9 +7,7 @@ export default eventHandler(async (event: H3Event) => {
 
   const handled = handleCors(event, {
     origin: [process.env.NITRO_ALLOW_ORIGIN],
-    methods: '*',
-    allowHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
+    methods: '*'
   })
 
 
@@ -37,6 +35,8 @@ export default eventHandler(async (event: H3Event) => {
 
 
   let resp = await fetch(originUrl.toString())
+
+  new Headers(resp.headers).forEach(console.log)
   if (resp.headers.get(`content-encoding`)) {
     const headers = new Headers(resp.headers)
     headers.delete(`content-encoding`)
