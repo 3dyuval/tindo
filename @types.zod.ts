@@ -30,9 +30,9 @@ const listItemSchema = z.discriminatedUnion('type', [
 export const itemSchema = z.object({
   id: z.string().uuid(),
   created_by: z.string().uuid(),
-  created_at: z.string().datetime(),
+  created_at: z.coerce.date(),
   updated_by: z.string().uuid().optional(),
-  updated_at: z.string().datetime().optional(),
+  updated_at: z.coerce.date().optional(),
   body: z.object({
     type: z.string(),
     category: z.string(),

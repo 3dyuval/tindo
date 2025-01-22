@@ -10,7 +10,6 @@ import { $items } from "../todos.store";
 import { format, parseISO } from 'date-fns'
 import 'remixicon/fonts/remixicon.css'
 import { useAuth0 } from '@auth0/auth0-react';
-import { useShape } from "@electric-sql/react"
 
 
 export function Board() {
@@ -38,21 +37,8 @@ export function Board() {
     disableConfirmAddItem: false
   }
 
-  // const items = useAtom<Item[]>($items)
+  const items = useAtom<Item[]>($items)
 
-  const { data: items, isLoading } = useShape<Item[]>({
-    url: `${import.meta.env.VITE_BASE_SERVER_URL}/electric`,
-    params: {
-      table: 'todos'
-    },
-    onError: (error) => {
-      console.error(error)
-      alert(error.message)
-    },
-    headers: {
-      Authorization: `Bearer ${localStorage['token']}`
-    }
-  })
   return (<div className="board-container">
         <div className="toolbar board-toolbar">
           <button onClick={() => setStacked(!stacked)}>Stacked</button>
@@ -82,7 +68,7 @@ export function Board() {
                     </div>
                     <ul>
                       {(items || [])
-                          .filter((i) => i.data?.category === category)
+                          .filter((i) => i.body?.category === category)
                           .map((item) =>
                               <Item {...item} config={config} key={item.id}/>
                           )
@@ -121,7 +107,7 @@ function EditItem(props: Item & { config: UserConfig }) {
   const [editing, setEditing] = useState(false)
   const [items, { getItemActions }] = useAtom($items, true)
 
-  const {  id, body, config } = props
+  const { id, body, config } = props
   const categories = Object.values(config.boardTypes[body.type])
   const { setCategory, remove, setBody } = getItemActions(items.findIndex(i => i.id === id))
 
@@ -161,7 +147,7 @@ function EditItem(props: Item & { config: UserConfig }) {
 
 function AddItem(props: Item & { config: UserConfig, type: string, category: string }) {
 
-  const { config,  category, type } = props
+  const { config, category, type } = props
   const [adding, setAdding] = useState(false)
   const [, { add }] = useAtom($items, true)
 
