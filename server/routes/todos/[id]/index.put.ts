@@ -1,39 +1,52 @@
-import { H3Event } from "h3"
 import { sql } from "~/utils/useDb"
-import { useUser } from "~/utils/useUser"
+import { itemBodySchema } from "../../../../@types.zod"
 
 
 export default eventHandler(async (event) => {
 
 
-  const id = getRouterParam(event, 'id')
   const payload = await readBody(event)
+  const itemBody = itemBodySchema.safeParse(payload.body)
 
-  if (!payload.body) {
-    return new Response(`Invalid input data: ${payload}`, {
+  if (!itemBody.success) {
+    return new Response(`Invalid input data: ${JSON.stringify(itemBody.error)}`, {
       status: 400
     });
   }
 
+  const id = getRouterParam(event, 'id')
+
+  const checkQuery = `
+      SELECT COUNT(*) as count
+      FROM todos
+      WHERE id = '${id}'`;
+
+  const [{ count }] = await sql(checkQuery)
+
+  if (!+count) {
+    return new Response(`Todo not found: ${id}`, {
+      status: 404
+    });
+  }
+
   const query = `
-      INSERT INTO todos (creator_id, data) VALUES ($1, $2) RETURNING created_at, id;
+      INSERT INTO todos (creator_id, data)
+      VALUES ('${event.context.user.id}', itemBody)
+      RETURNING *;
   `;
 
 
-  try {
+  const result = await sql(query)
+      .catch((error: any) => {
+        console.error('Error updating todo:', error);
+        return new Response(`Error updating todo: ${error.message}`, {
+          status: 500
+        });
+      })
 
-    const result = await sql(query, [event.context.user.id, payload.body ]);
-
-    return new Response(JSON.stringify(result), {
-      status: 201,
-      headers: { 'Content-Type': 'application/json' }
-    });
-
-  } catch (error: any) {
-    console.error('Error inserting new todo:', error);
-    return new Response(`Error inserting new todo: ${error.message}`, {
-      status: 500
-    });
-  }
+  return new Response(JSON.stringify(result), {
+    status: 201,
+    headers: { 'Content-Type': 'application/json' }
+  })
 
 })

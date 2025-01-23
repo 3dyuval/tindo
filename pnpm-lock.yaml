@@ -78,6 +78,9 @@ importers:
       h3:
         specifier: ^1.13.0
         version: 1.13.1
+      h3-zod:
+        specifier: ^0.5.3
+        version: 0.5.3(h3@1.13.1)(zod@3.24.1)
       pg:
         specifier: ^8.13.1
         version: 8.13.1
@@ -1312,6 +1315,12 @@ packages:
   gzip-size@7.0.0:
     resolution: {integrity: sha512-O1Ld7Dr+nqPnmGpdhzLmMTQ4vAsD+rHwMm1NLUmoUFFymBOMKxCCrtDxqdBRYXdeEPEi3SyoR4TizJLQrnKBNA==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
+  h3-zod@0.5.3:
+    resolution: {integrity: sha512-wqlRd/d5d9sNYxmNglnL63J4v5HiZZrcXdLIiU2cBsy5gTwxrSH1AqtNrVkuUleshgNOAQldbuO06phdUIxuKA==}
+    peerDependencies:
+      h3: ^1.6.0
+      zod: ^3.21.0
 
   h3@1.13.1:
     resolution: {integrity: sha512-u/z6Z4YY+ANZ05cRRfsFJadTBrNA6e3jxdU+AN5UCbZSZEUwgHiwjvUEe0k1NoQmAvQmETwr+xB5jd7mhCJuIQ==}
@@ -3661,6 +3670,11 @@ snapshots:
   gzip-size@7.0.0:
     dependencies:
       duplexer: 0.1.2
+
+  h3-zod@0.5.3(h3@1.13.1)(zod@3.24.1):
+    dependencies:
+      h3: 1.13.1
+      zod: 3.24.1
 
   h3@1.13.1:
     dependencies:

@@ -26,6 +26,15 @@ const listItemSchema = z.discriminatedUnion('type', [
 ])
 
 
+export const itemBodySchema = z.object({
+  type: z.string(),
+  category: z.string(),
+  title: z.string().optional(),
+  list: z.array(listItemSchema).optional(),
+  priority: z.number().min(-3).max(3).default(0)
+})
+
+
 // Zod schema for Todo
 export const itemSchema = z.object({
   id: z.string().uuid(),
@@ -33,17 +42,11 @@ export const itemSchema = z.object({
   created_at: z.coerce.date(),
   updated_by: z.string().uuid().optional(),
   updated_at: z.coerce.date().optional(),
-  body: z.object({
-    type: z.string(),
-    category: z.string(),
-    title: z.string().optional(),
-    list: z.array(listItemSchema).optional(),
-    priority: z.number().min(-3).max(3).default(0)
-  })
+  body: itemBodySchema
 })
 
-
 export type Item = z.infer<typeof itemSchema>;
+export type ItemBody = z.infer<typeof itemBodySchema>;
 
 const config = z.object({
   boardTypes: z.record(z.string(), z.array(z.string())),

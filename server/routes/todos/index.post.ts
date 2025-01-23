@@ -1,6 +1,7 @@
 import { H3Event } from "h3"
 import { sql } from "~~/utils/useDb"
 import { useUser } from "~~/utils/useUser"
+import { itemBodySchema } from "../../../@types.zod"
 
 
 export default eventHandler(async (event) => {
@@ -8,8 +9,9 @@ export default eventHandler(async (event) => {
 
   const payload = await readBody(event)
 
+  const itemBody = itemBodySchema.safeParse(payload.body)
 
-  if (!payload.body) {
+  if (!itemBody.success) {
     return new Response(`Invalid input data: ${payload}`, {
       status: 400
     });
