@@ -2,15 +2,7 @@ import { atom } from 'xoid'
 import { Item } from '~/@types.zod'
 import { api, todosStream } from '@/api'
 
-
-const getLocalStorage = (key) => JSON.parse(localStorage.getItem(key))
-
-const setLocalStorage = (key) => (state) =>
-    localStorage.setItem(key, JSON.stringify(state))
-
-const initialItems = getLocalStorage('items') || [] as Item[]
-
-export const $items = atom(initialItems, (atom) => {
+export const $items = atom([] as Array<Item>, (atom) => {
 
       async function add(item: Item) {
 
@@ -26,18 +18,14 @@ export const $items = atom(initialItems, (atom) => {
       function getItemActions(index: number) {
         const $item = atom.focus(index)
         return {
-          setCategory(category: string) {
-            $item.update(item => ({ ...item, category }))
-          },
           setBody(body: Item['body']) {
             $item.update(item => ({ ...item, body }))
           },
-          remove() {
+          remove(id: string) {
             atom.update((items) => items.filter(i => i.id !== id))
           }
         }
       }
-
 
       return {
         add,
@@ -62,5 +50,4 @@ todosStream.subscribe((payload) => {
   $items.update((prevTodos) => [...prevTodos, ...todos])
 })
 
-$items.subscribe(setLocalStorage('items'))
 

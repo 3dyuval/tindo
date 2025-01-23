@@ -110,6 +110,22 @@ input, textarea, select {
     outline: 1px solid var(--primary-focus);
     outline-offset: -2px;
   }
+
+
+  &.info {
+    background-color: #e7f5ff;
+    color: #000;
+  }
+
+  &.warn {
+    background-color: #fff3cd;
+    color: #000;
+  }
+
+  &.danger {
+    background-color: #f8d7da;
+    color: #000;
+  }
 }
 
 textarea {
@@ -168,7 +184,7 @@ select[multiple] {
   color: #000;
 }
 
-.alert-warning {
+.alert-warn {
   background-color: #fff3cd;
   color: #000;
 }

@@ -109,7 +109,7 @@ function EditItem(props: Item & { config: UserConfig }) {
 
   const { id, body, config } = props
   const categories = Object.values(config.boardTypes[body.type])
-  const { setCategory, remove, setBody } = getItemActions(items.findIndex(i => i.id === id))
+  const {  remove, setBody } = getItemActions(items.findIndex(i => i.id === id))
 
   function handleChangeTitle() {
     const title = prompt('What do you want to do?')
@@ -117,6 +117,16 @@ function EditItem(props: Item & { config: UserConfig }) {
       setBody({ ...body, title })
     }
   }
+
+  function handleSetCategory(event) {
+    setBody({ ...body, category: event.target.value })
+  }
+
+  function handleChangePriority(event) {
+    const value = event.target.valueAsNumber
+    setBody({ ...body, priority: value })
+  }
+
 
   return (<>
     <button className="secondary" type="button" onClick={() => setEditing(true)}>...</button>
@@ -128,13 +138,17 @@ function EditItem(props: Item & { config: UserConfig }) {
         </label>
         <label>
           Option
-          <select onChange={(e) => setCategory(e.target.value)} value={body.category}>
+          <select onChange={handleSetCategory} value={body.category}>
             {categories.map(category => <option key={category} value={category}>{category}</option>)}
           </select>
         </label>
         <label>
           Priority
-          <input type="number" defaultValue={body.priority} min={-3} max={3} step={1}/>
+          <input type="number" onChange={handleChangePriority} defaultValue={body.priority} min={-3} max={3} step={1}/>
+        </label>
+        <label>
+          Delete
+          <input type="button" onClick={() => remove(id)} className="danger" value="Delete" />
         </label>
         <div className="toolbar">
           <button className="ri-delete-back-fill x secondary" onClick={() => setEditing(false)}></button>
