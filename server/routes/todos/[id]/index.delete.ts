@@ -1,29 +1,29 @@
-export default eventHandler(async (event) => {
-
-  const id = getRouterParam(event, 'id')
-
-  const query = `
-      DELETE
-      FROM todos
-      WHERE id = ${id}
-  `;
-
-
-  try {
-    const client = await pool.connect()
-    const result = await client.query(query);
-
-    client.release();
-
-    return new Response('Deleted', {
-      status: 200
-    });
-
-  } catch (error: any) {
-    console.error('Error inserting new todo:', error);
-    return new Response(`Error inserting new todo: ${error.message}`, {
-      status: 500
-    });
-  }
-
-})
+// export default eventHandler({
+//   onRequest: [useParamId],
+  // handler: async (event) => {
+  //
+  //   const id = getRouterParam(event, 'id')
+  //
+  //   const query = `
+  //       DELETE
+  //       FROM todos
+  //       WHERE id = '${id}'
+  //   `;
+  //
+  //
+  //   try {
+  //     await sql(query);
+  //
+  //     return new Response({
+  //       status: 204
+  //     });
+  //
+  //   } catch (error: any) {
+  //     console.error('Error deleteing todo:', error);
+  //     return new Response(`Error deleteing todo: ${error.message}`, {
+  //       status: 500
+  //     });
+  //   }
+  //
+  // })
+// })

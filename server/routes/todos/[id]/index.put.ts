@@ -1,13 +1,13 @@
 import { H3Event } from "h3"
-import { sql } from "~~/utils/useDb"
-import { useUser } from "~~/utils/useUser"
+import { sql } from "~/utils/useDb"
+import { useUser } from "~/utils/useUser"
 
 
 export default eventHandler(async (event) => {
 
 
+  const id = getRouterParam(event, 'id')
   const payload = await readBody(event)
-
 
   if (!payload.body) {
     return new Response(`Invalid input data: ${payload}`, {

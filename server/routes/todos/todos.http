@@ -1,15 +1,17 @@
-POST http://localhost:4000/todos
-Authorization: Bearer 123
-
-{"data": { "title": "test", "column": "Todo" }}
-###
-
-
+### Get all todos
 GET http://localhost:4000/todos
 Authorization: Bearer 123
-###
 
+### Get a specific todo
+GET http://localhost:4000/todos/349b0bf8-8ec1-4f79-8e0f-574b365a7fa7
+Authorization: Bearer 123
 
-DELETE http://localhost:4000/todos/996caea5-8419-4bf1-876b-822f49b718cc
+### Create a todo
+POST http://localhost:4000/todos
+Authorization: Bearer 123
+{"body": { "title": "test", "column": "Todo" }}
+
+### Delete a todo
+DELETE http://localhost:4000/todos/22b88f1e-27f7-4b77-a5c4-5cab622dee0d
 Authorization: Bearer 123
 ###
