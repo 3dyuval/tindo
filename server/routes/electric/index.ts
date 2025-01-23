@@ -4,19 +4,6 @@ import { getRequestURL, H3Event, handleCors } from "h3"
 
 export default eventHandler(async (event: H3Event) => {
 
-
-  const handled = handleCors(event, {
-    origin: [process.env.NITRO_ALLOW_ORIGIN],
-    methods: '*'
-  })
-
-
-  const user = await useUser(event)
-  if (!user) {
-    return new Response(`user not found`, { status: 401 })
-  }
-
-
   const url = getRequestURL(event)
   const originUrl = new URL(process.env.NITRO_ELECTRIC_URL)
 
@@ -29,8 +16,8 @@ export default eventHandler(async (event: H3Event) => {
   })
 
   // Only query data the user has access to unless they're an admin.
-  if (!user.roles.includes(`admin`)) {
-    originUrl.searchParams.set('where', `creator_id='${user.id}'`)
+  if (!event.context.user.roles.includes(`admin`)) {
+    originUrl.searchParams.set('where', `creator_id='${event.context.user.id}'`)
   }
 
 

@@ -1,5 +1,6 @@
 {
-  "name": "h3-websocket-monorepo",
+  "name": "tindo",
+  "repository": "https://github.com/3dyuval/tindo.git",
   "private": true,
   "scripts": {
     "dev": "pnpm -r run dev",

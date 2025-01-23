@@ -1,13 +1,10 @@
-import { H3Event, handleCors } from "h3"
-import { sql, useUser } from "~~/utils"
+import { H3Event } from "h3"
+import { sql } from "~~/utils/useDb"
+import { useUser } from "~~/utils/useUser"
 
 
-export default eventHandler(async (event: H3Event) => {
+export default eventHandler(async (event) => {
 
-  const user = await useUser(event)
-  if (!user) {
-    return new Response(`user not found`, { status: 401 })
-  }
 
   const payload = await readBody(event)
 
@@ -20,13 +17,13 @@ export default eventHandler(async (event: H3Event) => {
 
   const query = `
       INSERT INTO todos (creator_id, data)
-      VALUES ($1, $2) RETURNING id, creator_id, data, created_at, updated_at;
+      VALUES (${event.contenxt.user.id}, ${payload.body}) RETURNING id, creator_id, data, created_at, updated_at;
   `;
 
 
   try {
 
-    const result = await sql(query, [user.id, payload.body]);
+    const result = await sql(query);
 
     return new Response(JSON.stringify(result), {
       status: 201,

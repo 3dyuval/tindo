@@ -1,17 +1,14 @@
 import { neon, Pool } from '@neondatabase/serverless';
 
-//@ts-ignore
-const dbUrl = process.env.NITRO_DB_URL_REMOTE
-if (!dbUrl) {
+if (!process.env.NITRO_DB_URL) {
   throw new Error('DB_URL environment variable is not set');
 }
 
 const pool = new Pool({
-  connectionString: dbUrl,
-  database: 'todos'
+  connectionString: process.env.NITRO_DB_URL
 });
 
 
-const sql = neon(dbUrl);
+const sql = neon(process.env.NITRO_DB_URL);
 
 export { pool, sql }

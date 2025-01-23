@@ -6,6 +6,6 @@ services:
     env_file:
       - .env
     environment:
-      DATABASE_URL: ${NITRO_DB_URL_REMOTE}
+      DATABASE_URL: ${NITRO_DB_URL}
     ports:
       - "4080:3000"

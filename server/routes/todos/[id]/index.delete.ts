@@ -1,31 +1,22 @@
-import { assertMethod, handleCors, isMethod } from "h3"
-import { useUser, pool } from "../../../utils"
-
 export default eventHandler(async (event) => {
-  handleCors(event, {
-    origin: process.env.NITRO_ALLOW_ORIGIN
-})
-
-  const user = await useUser(event)
-  if (!user) {
-    return new Response(`user not found`, { status: 401 })
-  }
 
   const id = getRouterParam(event, 'id')
 
   const query = `
-    DELETE FROM todos WHERE id = $1
+      DELETE
+      FROM todos
+      WHERE id = ${id}
   `;
 
 
   try {
     const client = await pool.connect()
-    const result = await client.query(query, [id]);
+    const result = await client.query(query);
 
     client.release();
 
     return new Response('Deleted', {
-      status: 200,
+      status: 200
     });
 
   } catch (error: any) {
