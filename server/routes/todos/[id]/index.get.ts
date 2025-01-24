@@ -12,7 +12,7 @@ export default eventHandler(async (event) => {
       if (error) {
         return new Response(`Todo not found`, {
           status: 404,
-          header: {
+          headers: {
             'Content-Type': 'text/plain'
           }
         })
@@ -33,16 +33,16 @@ export default eventHandler(async (event) => {
           })
 
 
-    //   if (!result.length) {
-    //     return new Response(`Todo not found: ${id}`, {
-    //       status: 404
-    //     });
-    //   }
-    //
-    //   return new Response(JSON.stringify(result), {
-    //     status: 200,
-    //     headers: { 'Content-Type': 'application/json' }
-    //   });
-    //
-    // }
+      if (!result.length) {
+        return new Response(`Todo not found: ${id}`, {
+          status: 404
+        });
+      }
+
+      return new Response(JSON.stringify(result), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+    }
 )

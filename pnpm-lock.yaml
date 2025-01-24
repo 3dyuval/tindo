@@ -75,6 +75,9 @@ importers:
       '@neondatabase/serverless':
         specifier: ^0.10.4
         version: 0.10.4
+      dotenv:
+        specifier: ^16.4.7
+        version: 16.4.7
       h3:
         specifier: ^1.13.0
         version: 1.13.1
