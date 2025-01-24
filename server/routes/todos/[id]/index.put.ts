@@ -16,10 +16,14 @@ export default eventHandler(async (event) => {
 
   const id = getRouterParam(event, 'id')
 
-  const checkQuery = `
+  let checkQuery = `
       SELECT COUNT(*) as count
       FROM todos
       WHERE id = '${id}'`;
+
+  if (!event.context.user.roles.includes('admin')) {
+    checkQuery += ` AND creator_id='${event.context.user.id}'`; // Filter by creator_id if not an admin
+  }
 
   const [{ count }] = await sql(checkQuery)
 
@@ -29,12 +33,15 @@ export default eventHandler(async (event) => {
     });
   }
 
-  const query = `
+  let query = `
       INSERT INTO todos (creator_id, data)
       VALUES ('${event.context.user.id}', itemBody)
       RETURNING *;
   `;
 
+  if (!event.context.user.roles.includes('admin')) {
+    query += ` AND creator_id='${event.context.user.id}'`; // Filter by creator_id if not an admin
+  }
 
   const result = await sql(query)
       .catch((error: any) => {

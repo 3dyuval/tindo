@@ -3,11 +3,15 @@ import { sql } from "~~/utils/useDb"
 
 export default eventHandler(async (event) => {
 
-      const query = `
+      let query = `
           SELECT *
           FROM todos
-          WHERE creator_id = '${event.context.user.id}';
       `;
+
+      if (!event.context.user.roles.includes('admin')) {
+        query += ` WHERE creator_id='${event.context.user.id}'`;
+      }
+
 
       return sql(query)
           .catch((error: any) => {

@@ -18,11 +18,15 @@ export default eventHandler(async (event) => {
         })
       }
 
-      const query = `
+      let query = `
           SELECT *
           FROM todos
           WHERE id = $1;
       `;
+
+      if (!event.context.user.roles.includes('admin')) {
+        query += ` AND creator_id='${event.context.user.id}'`; // Filter by creator_id if not an admin
+      }
 
       return await sql(query, [data.id])
           .catch((error: any) => {
