@@ -19,7 +19,7 @@ INSERT INTO tags (id, name) VALUES
 ('Personal');
 
 -- Actor1 creates a todo
-INSERT INTO todos (creator_id, data) VALUES
+INSERT INTO todos (user_id, data) VALUES
 ('5fceeb58-71e7-43fb-801d-466b4ead1959', '{"title": "Project Proposal"}');
 
 -- Actor1 adds collaborators to the todo
@@ -57,7 +57,7 @@ Executing the Queries
  INNER JOIN
      actors ac ON tc.actor_id = ac.id
  WHERE
-     t.creator_id = 'actor1-uuid'
+     t.user_id = 'actor1-uuid'
      OR t.id IN (
          SELECT todo_id FROM todo_collaborators WHERE actor_id = 'actor1-uuid'
      )
@@ -88,7 +88,7 @@ actor3-uuid	Charlie	charlie@example.com
    LEFT JOIN
        tags tg ON tt.tag_id = tg.id
    WHERE
-       t.creator_id = 'actor1-uuid'
+       t.user_id = 'actor1-uuid'
        OR t.id IN (
            SELECT todo_id FROM todo_collaborators WHERE actor_id = 'actor1-uuid'
        );
@@ -153,7 +153,7 @@ INNER JOIN
     actors ac ON tc.actor_id = ac.id
 WHERE
     tg.name = 'Work'
-    AND (t.creator_id = 'actor1-uuid'
+    AND (t.user_id = 'actor1-uuid'
         OR t.id IN (
             SELECT todo_id FROM todo_collaborators WHERE actor_id = 'actor1-uuid'
         ))

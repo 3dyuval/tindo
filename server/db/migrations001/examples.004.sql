@@ -22,7 +22,7 @@ INNER JOIN
     actors ac ON tc.actor_id = ac.id
 WHERE
     tg.name = :tag_name
-    AND (t.creator_id = :actor_id
+    AND (t.user_id = :actor_id
         OR t.id IN (
             SELECT todo_id FROM todo_collaborators WHERE actor_id = :actor_id
         ))

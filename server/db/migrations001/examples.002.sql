@@ -16,7 +16,7 @@ LEFT JOIN
 LEFT JOIN
     tags tg ON tt.tag_id = tg.id
 WHERE
-    t.creator_id = :actor_id
+    t.user_id = :actor_id
     OR t.id IN (
         SELECT todo_id FROM todo_collaborators WHERE actor_id = :actor_id
     );

@@ -19,7 +19,7 @@ INNER JOIN
 INNER JOIN
     actors ac ON tc.actor_id = ac.id
 WHERE
-    t.creator_id = :actor_id
+    t.user_id = :actor_id
     OR t.id IN (
         SELECT todo_id FROM todo_collaborators WHERE actor_id = :actor_id
     )

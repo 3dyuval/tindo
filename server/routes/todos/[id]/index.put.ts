@@ -22,7 +22,7 @@ export default eventHandler(async (event) => {
       WHERE id = '${id}'`;
 
   if (!event.context.user.roles.includes('admin')) {
-    checkQuery += ` AND creator_id='${event.context.user.id}'`; // Filter by creator_id if not an admin
+    checkQuery += ` AND user_id='${event.context.user.id}'`; // Filter by user_id if not an admin
   }
 
   const [{ count }] = await sql(checkQuery)
@@ -34,13 +34,13 @@ export default eventHandler(async (event) => {
   }
 
   let query = `
-      INSERT INTO todos (creator_id, data)
+      INSERT INTO todos (user_id, data)
       VALUES ('${event.context.user.id}', itemBody)
       RETURNING *;
   `;
 
   if (!event.context.user.roles.includes('admin')) {
-    query += ` AND creator_id='${event.context.user.id}'`; // Filter by creator_id if not an admin
+    query += ` AND user_id='${event.context.user.id}'`; // Filter by user_id if not an admin
   }
 
   const result = await sql(query)

@@ -25,7 +25,7 @@ export default eventHandler(async (event) => {
       `;
 
       if (!event.context.user.roles.includes('admin')) {
-        query += ` AND creator_id='${event.context.user.id}'`; // Filter by creator_id if not an admin
+        query += ` AND user_id='${event.context.user.id}'`; // Filter by user_id if not an admin
       }
 
       return await sql(query, [data.id])

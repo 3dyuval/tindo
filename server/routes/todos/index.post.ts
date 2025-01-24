@@ -18,7 +18,7 @@ export default eventHandler(async (event) => {
   }
 
   const query = `
-      INSERT INTO todos (creator_id, data) VALUES ($1, $2) RETURNING created_at, id;
+      INSERT INTO todos (user_id, data) VALUES ($1, $2) RETURNING created_at, id;
   `;
 
 

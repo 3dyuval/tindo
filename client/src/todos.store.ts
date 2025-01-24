@@ -41,7 +41,7 @@ todosStream.subscribe((payload) => {
       .filter(i => i.value)
       .map(item => ({
     body: item.value.data,
-    created_by: item.value.creator_id,
+    created_by: item.value.user_id,
     created_at: item.value.created_at,
     updated_at: item.value.updated_at,
     id: item.value.id,

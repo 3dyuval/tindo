@@ -9,7 +9,7 @@ export default eventHandler(async (event) => {
       `;
 
       if (!event.context.user.roles.includes('admin')) {
-        query += ` WHERE creator_id='${event.context.user.id}'`;
+        query += ` WHERE user_id='${event.context.user.id}'`;
       }
 
 

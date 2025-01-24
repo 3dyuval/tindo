@@ -14,7 +14,7 @@ export default eventHandler(async (event) => {
 
     const body = await readBody<User>(event);
     const {
-      user_id,
+        user_id,
         tenant = null,
         username = null,
         email = null,
