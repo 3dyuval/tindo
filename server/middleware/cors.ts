@@ -1,7 +1,7 @@
 import { H3Event } from "h3"
 
 
-export default eventHandler(async (event: H3Event) =>  {
+export default defineEventHandler(async (event: H3Event) =>  {
 
 
   const handled = handleCors(event, {

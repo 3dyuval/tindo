@@ -13,7 +13,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 
 export function Board() {
-  const { user, isAuthenticated, loginWithPopup, getAccessTokenSilently } = useAuth0();
+  const { user, isAuthenticated, loginWithPopup, getAccessTokenSilently, logout } = useAuth0();
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -42,7 +42,7 @@ export function Board() {
   return (<div className="board-container">
         <div className="toolbar board-toolbar">
           <button onClick={() => setStacked(!stacked)}>Stacked</button>
-          {isAuthenticated ? user.sub : <button onClick={loginWithPopup as any}>Login</button>}
+          {<button onClick={isAuthenticated ? logout : loginWithPopup}>{isAuthenticated ? 'Logout' : 'Login'}</button>}
           <select onChange={(e) => setSelectedBoardType(e.target.value)} value={selectedBoardType}>
             {Object.entries((config.boardTypes)).map(([type, categories]) => (
                 <option key={type} value={type}>{type}</option>

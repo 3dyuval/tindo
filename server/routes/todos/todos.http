@@ -1,6 +1,6 @@
 ### Get all todos
 GET http://localhost:4000/todos
-Authorization: {{token}}
+Authorization: Bearer {{token}}
 
 ### Get a specific todo
 GET http://localhost:4000/todos/349b0bf8-8ec1-4f79-8e0f-574b365a7fa7

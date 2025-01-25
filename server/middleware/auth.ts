@@ -1,24 +1,12 @@
 import jwt from 'jsonwebtoken';
 import JwksClient from 'jwks-client';
 
-
 const client = JwksClient({
   strictSsl: true,
-  jwksUri: `${process.env.NITRO_AUTH_ISSUER_BASE_URL}/.well-known/jwks.json`
-})
+  jwksUri: `${process.env.NITRO_AUTH_ISSUER_BASE_URL}.well-known/jwks.json`
+});
 
-function getKey(header, callback) {
-
-  client.getSigningKey(header.kid, function (err, key) {
-    if (err) {
-      throw new Error(err.message);
-    }
-    return callback(null, key.publicKey)
-  })
-}
-
-
-export default eventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   const token = getRequestHeader(event, 'Authorization')?.split(' ')[1]; // Assuming Bearer token
 
   if (!token) {
@@ -26,22 +14,33 @@ export default eventHandler(async (event) => {
   }
 
   try {
-
-    jwt.verify(token, getKey, {
-      audience: process.env.NITRO_AUTH_AUDIENCE,
-      issuer: process.env.NITRO_AUTH_ISSUER_BASE_URL
-    }, (err, decoded) => {
-      if (err) {
-        console.error('Token validation error:', err);
-        return new Response(`Not allowed: Invalid auth token`, { status: 401 });
-      }
-      // Store user info in event context
-      event.context.user = decoded;
+    const decoded = await new Promise((resolve, reject) => {
+      jwt.verify(token, getKey, {
+        audience: process.env.NITRO_AUTH0_CLIENT_ID,
+        issuer: process.env.NITRO_AUTH_ISSUER_BASE_URL
+      }, (err, decoded) => {
+        if (err) {
+          console.error('Token validation error:', err);
+          return reject(new Response(`Not allowed: Invalid auth token`, { status: 401 }));
+        }
+        resolve(decoded);
+      });
     });
 
+    event.context.user = decoded;
 
   } catch (err) {
     console.error('Token validation error:', err);
     return new Response(`Not allowed: Invalid auth token`, { status: 401 });
   }
 });
+
+
+function getKey(header, callback) {
+    client.getSigningKey(header.kid, function(err, key) {
+      if (err) {
+        throw new Error(err.message)
+      }
+      callback(null, key.publicKey)
+    });
+}

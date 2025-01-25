@@ -8,7 +8,7 @@ export default eventHandler(async (event) => {
           FROM todos
       `;
 
-      if (!event.context.user.roles.includes('admin')) {
+      if (!event.context.user?.roles?.includes('admin')) {
         query += ` WHERE user_id='${event.context.user.id}'`;
       }
 
