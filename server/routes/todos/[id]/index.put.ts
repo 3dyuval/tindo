@@ -9,33 +9,34 @@ export default eventHandler(async (event) => {
   const itemBody = itemBodySchema.safeParse(payload.body)
 
   if (!itemBody.success) {
-    return new Response(`Invalid input data: ${JSON.stringify(itemBody.error)}`, {
-      status: 400
-    });
+    return new Response(`Invalid input data: ${JSON.stringify(itemBody.error)}`,
+        { status: 400 }
+    );
   }
 
-  const id = getRouterParam(event, 'id')
+  const todoId = getRouterParam(event, 'id')
 
   let checkQuery = `
       SELECT COUNT(*) as count
       FROM todos
-      WHERE id = '${id}'`;
+      WHERE id = $1
+      `
 
-  if (!event.context.user.roles.includes('admin')) {
-    checkQuery += ` AND user_id='${event.context.user.id}'`; // Filter by user_id if not an admin
+  if (!event.context.user.roles?.includes('admin')) {
+    checkQuery += ` AND creator_id = $2`;
   }
 
-  const [{ count }] = await sql(checkQuery)
+  const [{ count }] = await sql(checkQuery, [todoId, event.context.user.sub])
 
   if (!+count) {
-    return new Response(`Todo not found: ${id}`, {
-      status: 404
-    });
+    return new Response(`Todo not found: ${todoId}`,
+        { status: 404 }
+    );
   }
 
   let query = `
-      INSERT INTO todos (user_id, data)
-      VALUES ('${event.context.user.id}', itemBody)
+      INSERT INTO todos (creator_id, data)
+      VALUES ($1, $2)
       RETURNING *;
   `;
 
@@ -43,7 +44,7 @@ export default eventHandler(async (event) => {
     query += ` AND user_id='${event.context.user.id}'`; // Filter by user_id if not an admin
   }
 
-  const result = await sql(query)
+  const result = await sql(query, [event.context.user.sub, itemBody.data])
       .catch((error: any) => {
         console.error('Error updating todo:', error);
         return new Response(`Error updating todo: ${error.message}`, {

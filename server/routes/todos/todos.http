@@ -3,23 +3,23 @@ GET http://localhost:4000/todos
 Authorization: Bearer {{token}}
 
 ### Get a specific todo
-GET http://localhost:4000/todos/349b0bf8-8ec1-4f79-8e0f-574b365a7fa7
-Authorization: @bearer.local
+GET http://localhost:4000/todos/5c85eebf-cba2-47df-a7a2-1f506b64c265
+Authorization: Bearer {{token}}
 
 ### Create a todo
 POST http://localhost:4000/todos
-Authorization: @bearer.local
+Authorization: Bearer {{token}}
 
 {"body": { "title": "test", "column": "Todo", "type": "kanban", "category": "todo" }}
 
 ### Update a todo
 PUT http://localhost:4000/todos/68cfecc0-798a-4b70-a703-9f1d0f93f216
-Authorization: @bearer.local
+Authorization: Bearer {{token}}
 
 {"body": { "title": "test999", "column": "Todo", "type": "kanban", "category": "todo" }}
 
 ### Delete a todo
 DELETE http://localhost:4000/todos/22b88f1e-27f7-4b77-a5c4-5cab622dee0d
-Authorization: @bearer.local
+Authorization: Bearer {{token}}
 
 ###

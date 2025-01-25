@@ -13,11 +13,11 @@ import { useAuth0 } from '@auth0/auth0-react';
 
 
 export function Board() {
-  const { user, isAuthenticated, loginWithPopup, getAccessTokenSilently, logout } = useAuth0();
+  const { user, isAuthenticated, loginWithPopup, getIdTokenClaims, logout } = useAuth0();
 
   useEffect(() => {
     if (isAuthenticated) {
-      getAccessTokenSilently().then(token => localStorage['token'] = token)
+      getIdTokenClaims().then(token => localStorage['token'] = token.__raw)
     }
   }, [isAuthenticated]);
 

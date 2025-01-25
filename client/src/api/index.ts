@@ -24,5 +24,5 @@ export const todosStream = new ShapeStream<Item>({
 export const auth0Options: Auth0ClientOptions = {
   domain: import.meta.env.VITE_AUTH0_DOMAIN,
   clientId: import.meta.env.VITE_AUTH0_CLIENT_ID,
-  cacheLocation: 'localstorage'
+  cacheLocation: 'localstorage',
 }

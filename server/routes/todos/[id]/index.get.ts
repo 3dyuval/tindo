@@ -21,14 +21,14 @@ export default eventHandler(async (event) => {
       let query = `
           SELECT *
           FROM todos
-          WHERE id = $1;
+          WHERE id = $1
       `;
 
-      if (!event.context.user.roles.includes('admin')) {
-        query += ` AND user_id='${event.context.user.id}'`; // Filter by user_id if not an admin
+      if (!event.context.user.roles?.includes('admin')) {
+        query += ` AND creator_id = $2`; // Filter by user_id if not an admin
       }
 
-      return await sql(query, [data.id])
+      const result = await sql(query, [data.id, event.context.user.sub])
           .catch((error: any) => {
             console.error('Error querying todo:', error);
             return new Response(`Error querying todo: ${error.message}`, {
@@ -37,16 +37,21 @@ export default eventHandler(async (event) => {
           })
 
 
+      if (result instanceof Response) {
+        return result
+      }
+
       if (!result.length) {
-        return new Response(`Todo not found: ${id}`, {
+        return new Response(`404: Todo not found ${data.id}`, {
           status: 404
         });
       }
 
-      return new Response(JSON.stringify(result), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' }
-      });
+      return new Response(
+          JSON.stringify(result), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' }
+          });
 
     }
 )
