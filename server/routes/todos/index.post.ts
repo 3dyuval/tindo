@@ -2,10 +2,10 @@ import { H3Event } from "h3"
 import { sql } from "~~/utils/useDb"
 import { useUser } from "~~/utils/useUser"
 import { itemBodySchema } from "../../../@types.zod"
+import { cors } from "nitro-cors"
 
 
 export default eventHandler(async (event) => {
-
 
   const payload = await readBody(event)
 

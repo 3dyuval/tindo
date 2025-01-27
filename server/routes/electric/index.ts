@@ -1,5 +1,5 @@
-import { useUser } from "~~/utils/useUser"
 import { getRequestURL, H3Event, handleCors } from "h3"
+import { cors } from "nitro-cors"
 
 
 export default eventHandler(async (event: H3Event) => {
@@ -23,7 +23,6 @@ export default eventHandler(async (event: H3Event) => {
 
   let resp = await fetch(originUrl.toString())
 
-  new Headers(resp.headers).forEach(console.log)
   if (resp.headers.get(`content-encoding`)) {
     const headers = new Headers(resp.headers)
     headers.delete(`content-encoding`)
@@ -41,5 +40,5 @@ export default eventHandler(async (event: H3Event) => {
     })
   }
   return resp
-});
+})
 
