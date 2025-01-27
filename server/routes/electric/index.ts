@@ -23,6 +23,7 @@ export default eventHandler(async (event: H3Event) => {
 
   let resp = await fetch(originUrl.toString())
 
+
   if (resp.headers.get(`content-encoding`)) {
     const headers = new Headers(resp.headers)
     headers.delete(`content-encoding`)

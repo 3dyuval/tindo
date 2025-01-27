@@ -36,18 +36,18 @@ export const $items = atom([] as Array<Item>, (atom) => {
 
 
 todosStream.subscribe((payload) => {
-  // console.log(todos)
   const todos = payload
       .filter(i => i.value)
       .map(item => ({
     body: item.value.data,
-    created_by: item.value.user_id,
+    creator_id: item.value.creator_id,
     created_at: item.value.created_at,
     updated_at: item.value.updated_at,
     id: item.value.id,
   })) as Item[]
 
-  $items.update((prevTodos) => [...prevTodos, ...todos])
+  console.log('settings todos', todos)
+  $items.update((prev) => [...prev, ...todos])
 })
 
 

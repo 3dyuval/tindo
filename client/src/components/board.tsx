@@ -18,6 +18,7 @@ export function Board() {
   useEffect(() => {
     if (isAuthenticated) {
       getIdTokenClaims().then(token => localStorage['token'] = token.__raw)
+      localStorage['client-id'] = user?.sub
     }
   }, [isAuthenticated]);
 
@@ -92,7 +93,7 @@ function Item(props: Item & { config: UserConfig }) {
   return <li className="item box" key={id}>
     <div className="item-header"><h3>{body.title}</h3><span>{body.priority}</span></div>
     <div className="toolbar">
-      <p>Created by {props.created_by.slice(0, 5)}</p>
+      <p>Created by {props.creator_id.slice(0, 5)}</p>
       <p>Created at {format(parseISO(props.created_at), config.dateString)}</p>
       {props.updated_at && <p>Updated at {format(parseISO(props.updated_at), config.dateString)}</p>}
       {props.updated_by && <p>Updated by {format(parseISO(props.updated_by), config.dateString)}</p>}
@@ -174,7 +175,7 @@ function AddItem(props: Item & { config: UserConfig, type: string, category: str
 
     const item = itemSchema.safeParse({
       id: crypto.randomUUID(),
-      created_by: localStorage['client-id'],
+      creator_id: localStorage['client-id'],
       created_at: new Date().toISOString(),
       body: {
         category: category,

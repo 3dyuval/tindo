@@ -38,9 +38,9 @@ export const itemBodySchema = z.object({
 // Zod schema for Todo
 export const itemSchema = z.object({
   id: z.string().uuid(),
-  created_by: z.string().uuid(),
+  creator_id: z.string(),
   created_at: z.coerce.date(),
-  updated_by: z.string().uuid().optional(),
+  updated_by: z.string().optional(),
   updated_at: z.coerce.date().optional(),
   body: itemBodySchema
 })

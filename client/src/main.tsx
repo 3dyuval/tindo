@@ -7,7 +7,6 @@ import { auth0Options } from "@/api"
 
 
 const rootDomNode = document.querySelector<HTMLDivElement>('#app')!;
-localStorage['client-id'] ??= crypto.randomUUID()
 const root = createRoot(rootDomNode);
 root.render(<Auth0Provider {...auth0Options}><Board/></Auth0Provider>);
 

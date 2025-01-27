@@ -1,8 +1,5 @@
-import { H3Event } from "h3"
 import { sql } from "~~/utils/useDb"
-import { useUser } from "~~/utils/useUser"
 import { itemBodySchema } from "../../../@types.zod"
-import { cors } from "nitro-cors"
 
 
 export default eventHandler(async (event) => {
@@ -18,13 +15,15 @@ export default eventHandler(async (event) => {
   }
 
   const query = `
-      INSERT INTO todos (creator_id, data) VALUES ($1, $2) RETURNING created_at, id;
+      INSERT INTO todos (creator_id, data)
+      VALUES ($1, $2)
+      RETURNING created_at, id;
   `;
 
 
   try {
 
-    const result = await sql(query, [event.context.user.id, payload.body ]);
+    const result = await sql(query, [event.context.user.sub, payload.body]);
 
     return new Response(JSON.stringify(result), {
       status: 201,
