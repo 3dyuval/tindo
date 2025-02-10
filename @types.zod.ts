@@ -46,7 +46,7 @@ export const itemSchema = z.object({
 })
 
 export type Item = z.infer<typeof itemSchema>;
-export type ItemDate = z.infer<typeof itemDataSchema>;
+export type ItemData = z.infer<typeof itemDataSchema>;
 
 const config = z.object({
   boardTypes: z.record(z.string(), z.array(z.string())),

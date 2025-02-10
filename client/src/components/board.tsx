@@ -126,7 +126,9 @@ function EditItem(props: Item & { config: UserConfig }) {
   const remove: any = () => {
     api({ method: 'DELETE', url: `/todos/${id}` })
   }
+
   const setData: any = () => {
+    api({ method: 'PUT', url: `/todos/${id}/data`, data })
   }
 
   function handleChangeTitle() {

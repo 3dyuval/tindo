@@ -1,15 +1,15 @@
 import { sql } from "~/utils/useDb"
-import { itemDataSchema } from "../../../../@types.zod"
+import { itemDataSchema } from "../../../../../@types.zod"
 
 
 export default eventHandler(async (event) => {
 
 
   const payload = await readBody(event)
-  const itemBody = itemDataSchema.safeParse(payload.body)
+  const itemData = itemDataSchema.safeParse(payload.body)
 
-  if (!itemBody.success) {
-    return new Response(`Invalid input data: ${JSON.stringify(itemBody.error)}`,
+  if (!itemData.success) {
+    return new Response(`Invalid input data: ${JSON.stringify(itemData.error)}`,
         { status: 400 }
     );
   }
@@ -44,7 +44,7 @@ export default eventHandler(async (event) => {
     query += ` AND user_id='${event.context.user.id}'`; // Filter by user_id if not an admin
   }
 
-  const result = await sql(query, [event.context.user.sub, itemBody.data])
+  const result = await sql(query, [event.context.user.sub, itemData.data])
       .catch((error: any) => {
         console.error('Error updating todo:', error);
         return new Response(`Error updating todo: ${error.message}`, {
