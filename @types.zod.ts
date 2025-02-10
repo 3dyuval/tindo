@@ -26,7 +26,7 @@ const listItemSchema = z.discriminatedUnion('type', [
 ])
 
 
-export const itemBodySchema = z.object({
+export const itemDataSchema = z.object({
   type: z.string(),
   category: z.string(),
   title: z.string().optional(),
@@ -42,11 +42,11 @@ export const itemSchema = z.object({
   created_at: z.string(),
   updated_by: z.string().optional(),
   updated_at: z.string().optional(),
-  body: itemBodySchema
+  data: itemDataSchema
 })
 
 export type Item = z.infer<typeof itemSchema>;
-export type ItemBody = z.infer<typeof itemBodySchema>;
+export type ItemDate = z.infer<typeof itemDataSchema>;
 
 const config = z.object({
   boardTypes: z.record(z.string(), z.array(z.string())),

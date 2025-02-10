@@ -1,14 +1,14 @@
 import { sql } from "~~/utils/useDb"
-import { itemBodySchema } from "../../../@types.zod"
+import { itemDataSchema } from "../../../@types.zod"
 
 
 export default eventHandler(async (event) => {
 
   const payload = await readBody(event)
 
-  const itemBody = itemBodySchema.safeParse(payload.body)
+  const itemData = itemDataSchema.safeParse(payload.data)
 
-  if (!itemBody.success) {
+  if (!itemData.success) {
     return new Response(`Invalid input data: ${payload}`, {
       status: 400
     });
@@ -23,7 +23,7 @@ export default eventHandler(async (event) => {
 
   try {
 
-    const result = await sql(query, [event.context.user.sub, payload.body]);
+    const result = await sql(query, [event.context.user.sub, payload.data]);
 
     return new Response(JSON.stringify(result), {
       status: 201,

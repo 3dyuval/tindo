@@ -7,11 +7,11 @@ import type { Item, UserConfig } from '~/@types.zod'
 import { itemSchema } from '~/@types.zod'
 import { useAtom } from '@xoid/react'
 import { $items } from "../todos.store";
-import { format, parseISO } from 'date-fns'
+import { format, formatRelative, parseISO } from 'date-fns'
 import 'remixicon/fonts/remixicon.css'
 import { useAuth0 } from '@auth0/auth0-react';
 import { useShape } from "@electric-sql/react"
-import { todoShape } from "@/api"
+import { api, todoShape } from "@/api"
 
 
 export function Board() {
@@ -41,8 +41,7 @@ export function Board() {
   }
 
   // const items = useAtom<Item[]>($items)
-  const { data: items } = useShape<Item>(todoShape)
-
+  const { data: items, lastSyncedAt, isLoading } = useShape<Item>(todoShape)
 
   const LoginButton = () => {
     if (isAuthenticated) {
@@ -54,7 +53,7 @@ export function Board() {
   return (<div className="board-container">
         <div className="toolbar board-toolbar">
           <button onClick={() => setStacked(!stacked)}>Stacked</button>
-          <LoginButton />
+          <LoginButton/>
           <select onChange={(e) => setSelectedBoardType(e.target.value)} value={selectedBoardType}>
             {Object.entries((config.boardTypes)).map(([type, categories]) => (
                 <option key={type} value={type}>{type}</option>
@@ -78,9 +77,10 @@ export function Board() {
                           type={type}
                       />
                     </div>
+                    {isLoading ? 'Syncing' : 'Synced ' + formatRelative(new Date(lastSyncedAt), new Date())}
                     <ul>
                       {(items || [])
-                          .filter((i) => i.body?.category === category)
+                          .filter((i) => i.data?.category === category)
                           .map((item) =>
                               <Item {...item} config={config} key={item.id}/>
                           )
@@ -95,14 +95,14 @@ export function Board() {
 }
 
 function Item(props: Item & { config: UserConfig }) {
-  const { id, body } = props
+  const { id, data } = props
 
   const { config, ...item } = props
 
   itemSchema.parse(item)
 
   return <li className="item box" key={id}>
-    <div className="item-header"><h3>{body.title}</h3><span>{body.priority}</span></div>
+    <div className="item-header"><h3>{data.title}</h3><span>{data.priority}</span></div>
     <div className="toolbar">
       <p>Created by {props.creator_id.slice(0, 5)}</p>
       <p>Created at {format(parseISO(props.created_at), config.dateString)}</p>
@@ -119,27 +119,30 @@ function EditItem(props: Item & { config: UserConfig }) {
   const [editing, setEditing] = useState(false)
   // const [items, { getItemActions }] = useAtom($items, true)
 
-  const { id, body, config } = props
-  const categories = Object.values(config.boardTypes[body.type])
+  const { id, data, config } = props
+  const categories = Object.values(config.boardTypes[data.type])
   // const {  remove, setBody } = getItemActions(items.findIndex(i => i.id === id))
 
-  const remove: any = () => {}
-  const setBody: any = () => {}
+  const remove: any = () => {
+    api({ method: 'DELETE', url: `/todos/${id}` })
+  }
+  const setData: any = () => {
+  }
 
   function handleChangeTitle() {
     const title = prompt('What do you want to do?')
     if (title) {
-      setBody({ ...body, title })
+      setData({ ...data, title })
     }
   }
 
   function handleSetCategory(event) {
-    setBody({ ...body, category: event.target.value })
+    setData({ ...data, category: event.target.value })
   }
 
   function handleChangePriority(event) {
     const value = event.target.valueAsNumber
-    setBody({ ...body, priority: value })
+    setData({ ...data, priority: value })
   }
 
 
@@ -149,21 +152,21 @@ function EditItem(props: Item & { config: UserConfig }) {
       <div className="dialog-content">
         <label>
           Title
-          <input type="text" readOnly onClick={handleChangeTitle} value={body.title}/>
+          <input type="text" readOnly onClick={handleChangeTitle} value={data.title}/>
         </label>
         <label>
           Option
-          <select onChange={handleSetCategory} value={body.category}>
+          <select onChange={handleSetCategory} value={data.category}>
             {categories.map(category => <option key={`${category}-select`} value={category}>{category}</option>)}
           </select>
         </label>
         <label>
           Priority
-          <input type="number" onChange={handleChangePriority} defaultValue={body.priority} min={-3} max={3} step={1}/>
+          <input type="number" onChange={handleChangePriority} defaultValue={data.priority} min={-3} max={3} step={1}/>
         </label>
         <label>
-          Delete { id }
-          <input type="button" onClick={() => remove(id)} className="danger" value="Delete" />
+          Delete {id}
+          <input type="button" onClick={() => remove(id)} className="danger" value="Delete"/>
         </label>
         <div className="toolbar">
           <button className="ri-delete-back-fill x secondary" onClick={() => setEditing(false)}></button>
@@ -191,7 +194,7 @@ function AddItem(props: Item & { config: UserConfig, type: string, category: str
       id: crypto.randomUUID(),
       creator_id: localStorage['client-id'],
       created_at: new Date().toISOString(),
-      body: {
+      data: {
         category: category,
         type: type,
         title: title
@@ -199,7 +202,7 @@ function AddItem(props: Item & { config: UserConfig, type: string, category: str
     })
 
     if (item.success) {
-      createTodo(item.data)
+      api({ data: item.data, method: 'POST', url: '/todos' })
     } else {
       alert(JSON.stringify(item.error))
     }

@@ -1,12 +1,12 @@
 import { sql } from "~/utils/useDb"
-import { itemBodySchema } from "../../../../@types.zod"
+import { itemDataSchema } from "../../../../@types.zod"
 
 
 export default eventHandler(async (event) => {
 
 
   const payload = await readBody(event)
-  const itemBody = itemBodySchema.safeParse(payload.body)
+  const itemBody = itemDataSchema.safeParse(payload.body)
 
   if (!itemBody.success) {
     return new Response(`Invalid input data: ${JSON.stringify(itemBody.error)}`,
