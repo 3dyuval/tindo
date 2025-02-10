@@ -10,6 +10,8 @@ import { $items } from "../todos.store";
 import { format, parseISO } from 'date-fns'
 import 'remixicon/fonts/remixicon.css'
 import { useAuth0 } from '@auth0/auth0-react';
+import { useShape } from "@electric-sql/react"
+import { todoShape } from "@/api"
 
 
 export function Board() {
@@ -38,12 +40,21 @@ export function Board() {
     disableConfirmAddItem: false
   }
 
-  const items = useAtom<Item[]>($items)
+  // const items = useAtom<Item[]>($items)
+  const { data: items } = useShape<Item>(todoShape)
+
+
+  const LoginButton = () => {
+    if (isAuthenticated) {
+      return <button onClick={logout}>Logout</button>
+    }
+    return <button onClick={() => loginWithPopup()}>Login</button>
+  }
 
   return (<div className="board-container">
         <div className="toolbar board-toolbar">
           <button onClick={() => setStacked(!stacked)}>Stacked</button>
-          {<button onClick={isAuthenticated ? logout : loginWithPopup}>{isAuthenticated ? 'Logout' : 'Login'}</button>}
+          <LoginButton />
           <select onChange={(e) => setSelectedBoardType(e.target.value)} value={selectedBoardType}>
             {Object.entries((config.boardTypes)).map(([type, categories]) => (
                 <option key={type} value={type}>{type}</option>
@@ -106,11 +117,14 @@ function Item(props: Item & { config: UserConfig }) {
 function EditItem(props: Item & { config: UserConfig }) {
 
   const [editing, setEditing] = useState(false)
-  const [items, { getItemActions }] = useAtom($items, true)
+  // const [items, { getItemActions }] = useAtom($items, true)
 
   const { id, body, config } = props
   const categories = Object.values(config.boardTypes[body.type])
-  const {  remove, setBody } = getItemActions(items.findIndex(i => i.id === id))
+  // const {  remove, setBody } = getItemActions(items.findIndex(i => i.id === id))
+
+  const remove: any = () => {}
+  const setBody: any = () => {}
 
   function handleChangeTitle() {
     const title = prompt('What do you want to do?')
@@ -140,7 +154,7 @@ function EditItem(props: Item & { config: UserConfig }) {
         <label>
           Option
           <select onChange={handleSetCategory} value={body.category}>
-            {categories.map(category => <option key={category} value={category}>{category}</option>)}
+            {categories.map(category => <option key={`${category}-select`} value={category}>{category}</option>)}
           </select>
         </label>
         <label>
@@ -148,7 +162,7 @@ function EditItem(props: Item & { config: UserConfig }) {
           <input type="number" onChange={handleChangePriority} defaultValue={body.priority} min={-3} max={3} step={1}/>
         </label>
         <label>
-          Delete
+          Delete { id }
           <input type="button" onClick={() => remove(id)} className="danger" value="Delete" />
         </label>
         <div className="toolbar">
@@ -164,7 +178,7 @@ function AddItem(props: Item & { config: UserConfig, type: string, category: str
 
   const { config, category, type } = props
   const [adding, setAdding] = useState(false)
-  const [, { add }] = useAtom($items, true)
+  const [, { createTodo }] = useAtom($items, true)
 
   const categories = Object.values(config.boardTypes[type])
 
@@ -185,7 +199,7 @@ function AddItem(props: Item & { config: UserConfig, type: string, category: str
     })
 
     if (item.success) {
-      add(item.data)
+      createTodo(item.data)
     } else {
       alert(JSON.stringify(item.error))
     }
@@ -202,7 +216,7 @@ function AddItem(props: Item & { config: UserConfig, type: string, category: str
       <div className="dialog-content">
         <div>
           <select defaultValue={category}>
-            {categories.map(category => <option key={category} value={category}>{category}</option>)}
+            {categories.map(category => <option key={`${category}-item`} value={category}>{category}</option>)}
           </select>
         </div>
         <div className="toolbar">

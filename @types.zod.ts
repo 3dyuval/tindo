@@ -39,9 +39,9 @@ export const itemBodySchema = z.object({
 export const itemSchema = z.object({
   id: z.string().uuid(),
   creator_id: z.string(),
-  created_at: z.coerce.date(),
+  created_at: z.string(),
   updated_by: z.string().optional(),
-  updated_at: z.coerce.date().optional(),
+  updated_at: z.string().optional(),
   body: itemBodySchema
 })
 
