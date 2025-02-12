@@ -1,4 +1,4 @@
-Feature: Navigate between todos, categories, and assign todos categories
+Feature: Navigate between items, categories, and assign items categories
 
   Scenario: Navigate between todos
     Given I have created todos (more than one)
@@ -15,14 +15,8 @@ Feature: Navigate between todos, categories, and assign todos categories
     And I am not in the 'Todo' or 'Doing' category
     Then I can clearly see that I am in the 'Doing' category
 
-  Scenario: Assign a todo to a category before creating it
-    Given I have just started to create a todo
-    And I am not in the 'Todo' category
-    And when I click on the 'Doing' category
-    Then I should be able to select a different category, i.e 'Todo'
-
-  Scenario: Move a todo to a 'Done' category
-    Given I have created todo(s)
-    When I hold and swipe to the right
-    Then the todo should be assigned to the category called 'Done'
+  Scenario: Move item horizontally (across column)
+    Given I am viewing a column with items
+    When I touch this item and swipe to the right
+    Then it should be assigned to the category to the right and not be visible
 
