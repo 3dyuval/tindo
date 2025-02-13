@@ -2,6 +2,11 @@
 GET http://localhost:4000/todos
 Authorization: Bearer {{token}}
 
+### get all todos directly from electric
+GET http://localhost:4000/electric?offset=-1&table=todos
+Authorization: Bearer {{token}}
+
+
 ### Get a specific todo
 GET http://localhost:4000/todos/5c85eebf-cba2-47df-a7a2-1f506b64c265
 Authorization: Bearer {{token}}

@@ -16,7 +16,7 @@ export default eventHandler(async (event: H3Event) => {
   })
 
   // Only query data the user has access to unless they're an admin.
-  if (!event.context.user.roles?.includes(`admin`)) {
+  if (!event.context.isAdmin) {
     originUrl.searchParams.set('where', `creator_id='${event.context.user.sub}'`)
   }
 

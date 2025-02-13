@@ -32,6 +32,10 @@ export default defineEventHandler(async (event) => {
       });
     });
 
+    if (decoded?.['tindo-client/roles']?.includes(`admin`)) {
+     event.context.isAdmin = true
+    }
+
     event.context.user = decoded;
 
   } catch (err) {
