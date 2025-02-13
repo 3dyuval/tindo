@@ -9,7 +9,7 @@ export default eventHandler(async (event) => {
       WHERE id = '${id}'
   `;
 
-  if (!event.context.user.roles?.includes(`admin`)) {
+  if (!event.context.isAdmin) {
     query += ` AND creator_id = '${event.context.user.sub}'`;
   }
 

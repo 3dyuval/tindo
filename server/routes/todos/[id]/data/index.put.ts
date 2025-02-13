@@ -22,8 +22,8 @@ export default eventHandler(async (event) => {
       WHERE id = $1
       `
 
-  if (!event.context.user.roles?.includes('admin')) {
-    checkQuery += ` AND creator_id = $2`;
+  if (!event.context.isAdmin) {
+    checkQuery += ` AND creator_id = '${event.context.user.sub}'`;
   }
 
   const [{ count }] = await sql(checkQuery, [todoId, event.context.user.sub])
@@ -40,7 +40,7 @@ export default eventHandler(async (event) => {
       RETURNING *;
   `;
 
-  if (!event.context.user.roles.includes('admin')) {
+  if (!event.context.isAdmin) {
     query += ` AND user_id='${event.context.user.id}'`; // Filter by user_id if not an admin
   }
 

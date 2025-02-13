@@ -1,7 +1,20 @@
 import axios from 'axios';
 import { Auth0ProviderOptions } from "@auth0/auth0-react"
-import { ShapeStream } from "@electric-sql/client"
-import { Item } from "~/@types.zod.ts"
+import Dexie, { EntityTable } from "dexie"
+import { Item } from "~/@types.zod"
+import { z } from "zod"
+
+export const localdb = new Dexie('tindo') as Dexie & {
+  todos: EntityTable<
+      Item,
+      'id'
+  >
+};
+
+
+localdb.version(1).stores({
+  todos: '++id, creator_id, created_at, updated_by, updated_at, data'
+});
 
 
 export const api = axios.create({
@@ -12,7 +25,7 @@ export const api = axios.create({
 });
 
 export const todoShape = {
-  url: `${import.meta.env.VITE_BASE_SERVER_URL}/electric/`,
+  url: `${import.meta.env.VITE_BASE_SERVER_URL}/shape/`,
   params: {
     table: 'todos'
   },

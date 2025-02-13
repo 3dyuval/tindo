@@ -11,11 +11,22 @@ import { format, formatRelative, parseISO } from 'date-fns'
 import 'remixicon/fonts/remixicon.css'
 import { useAuth0 } from '@auth0/auth0-react';
 import { useShape } from "@electric-sql/react"
-import { api, todoShape } from "@/api"
+import { localdb, api, todoShape } from "@/api"
 
 
 export function Board() {
   const { user, isAuthenticated, loginWithPopup, getIdTokenClaims, logout } = useAuth0();
+  const { data: items, lastSyncedAt, isLoading } = useShape<Item>(todoShape)
+
+  useEffect(() => {
+    const _items = items.map(i => {
+      return {
+        key: i.id as string,
+        changes: _items
+      }
+    })
+    localdb.todos.bulkUpdate(_items)
+  }, [items]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -39,9 +50,6 @@ export function Board() {
     dateString: 'MM/dd/yy',
     disableConfirmAddItem: false
   }
-
-  // const items = useAtom<Item[]>($items)
-  const { data: items, lastSyncedAt, isLoading } = useShape<Item>(todoShape)
 
   const LoginButton = () => {
     if (isAuthenticated) {

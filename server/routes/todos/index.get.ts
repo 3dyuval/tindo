@@ -8,12 +8,12 @@ export default eventHandler(async (event) => {
           FROM todos
       `;
 
-      if (!event.context.user.roles?.includes('admin')) {
-        query += ` WHERE creator_id = $1`;
+      if (!event.context.isAdmin) {
+        query += ` WHERE creator_id = '${event.context.user.sub}'`;
       }
 
 
-      return sql(query, [event.context.user.sub])
+      return sql(query)
           .catch((error: any) => {
             console.error('Error querying todo:', error);
             return new Response(`Error querying todo: ${error.message}`, {

@@ -24,11 +24,11 @@ export default eventHandler(async (event) => {
           WHERE id = $1
       `;
 
-      if (!event.context.user.roles?.includes('admin')) {
-        query += ` AND creator_id = $2`; // Filter by user_id if not an admin
+      if (!event.context.isAdmin) {
+        query += ` AND creator_id = '${event.context.user.sub}'`; // Filter by user_id if not an admin
       }
 
-      const result = await sql(query, [data.id, event.context.user.sub])
+      const result = await sql(query, [data.id])
           .catch((error: any) => {
             console.error('Error querying todo:', error);
             return new Response(`Error querying todo: ${error.message}`, {
