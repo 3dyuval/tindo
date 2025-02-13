@@ -5,8 +5,8 @@ import { itemDataSchema } from "../../../../../@types.zod"
 export default eventHandler(async (event) => {
 
 
-  const payload = await readBody(event)
-  const itemData = itemDataSchema.safeParse(payload.body)
+  const body = await readBody(event)
+  const itemData = itemDataSchema.safeParse(body)
 
   if (!itemData.success) {
     return new Response(`Invalid input data: ${JSON.stringify(itemData.error)}`,
@@ -20,11 +20,8 @@ export default eventHandler(async (event) => {
       SELECT COUNT(*) as count
       FROM todos
       WHERE id = $1
-      `
-
-  if (!event.context.isAdmin) {
-    checkQuery += ` AND creator_id = '${event.context.user.sub}'`;
-  }
+        AND creator_id = $2
+  `
 
   const [{ count }] = await sql(checkQuery, [todoId, event.context.user.sub])
 
@@ -34,27 +31,44 @@ export default eventHandler(async (event) => {
     );
   }
 
-  let query = `
-      INSERT INTO todos (creator_id, data)
-      VALUES ($1, $2)
-      RETURNING *;
-  `;
+  const updateQuery = `
+      UPDATE todos
+      SET data       = $1,
+          updated_at = CURRENT_TIMESTAMP
+      WHERE id = $2
+        AND creator_id = $3
+      RETURNING *
+  `
 
-  if (!event.context.isAdmin) {
-    query += ` AND user_id='${event.context.user.id}'`; // Filter by user_id if not an admin
+
+  try {
+    const result = await sql(updateQuery, [
+      itemData.data,
+      todoId,
+      event.context.user.sub
+    ])
+
+    if (!result.length) {
+      return new Response(
+          'Todo not updated',
+          { status: 400 }
+      )
+    }
+
+    return new Response(
+        JSON.stringify(result[0]),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' }
+        }
+    )
+  } catch (error: any) {
+    console.error('Error updating todo:', error)
+    return new Response(
+        `Error updating todo: ${error.message}`,
+        { status: 500 }
+    )
   }
 
-  const result = await sql(query, [event.context.user.sub, itemData.data])
-      .catch((error: any) => {
-        console.error('Error updating todo:', error);
-        return new Response(`Error updating todo: ${error.message}`, {
-          status: 500
-        });
-      })
-
-  return new Response(JSON.stringify(result), {
-    status: 201,
-    headers: { 'Content-Type': 'application/json' }
-  })
 
 })

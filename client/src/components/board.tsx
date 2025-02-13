@@ -22,7 +22,7 @@ export function Board() {
     const _items = items.map(i => {
       return {
         key: i.id as string,
-        changes: _items
+        changes: i
       }
     })
     localdb.todos.bulkUpdate(_items)
