@@ -7,6 +7,11 @@ const client = JwksClient({
 });
 
 export default defineEventHandler(async (event) => {
+  if (process.env.NITRO_DISABLE_AUTHENTICATION) {
+    event.context.user = { roles: ['admin'] };
+    return
+  }
+
   const token = getRequestHeader(event, 'Authorization')?.split(' ')[1]; // Assuming Bearer token
 
   if (!token) {
